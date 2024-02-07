@@ -1,0 +1,83 @@
+<nav class="navbar navbar-expand-lg bg-body-tertiary" data-bs-theme="dark" >
+    <div class="container-fluid">
+      <a class="navbar-brand" href="">WheelBazaar</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+          <li class="nav-item">
+            <a class="nav-link active" aria-current="page" href="/">Home</a>
+          </li>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+              Brands
+            </a>
+            <ul class="dropdown-menu">
+              <%for(let i=0;i<company_names.length;i++) {%>
+                <li>
+                  <button class="dropdown-item" name="brand_buttons"><%=company_names[i].NAME%></button>
+              </li>
+              <%}%>
+            </ul>
+          </li>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+              Car types
+            </a>
+            <ul class="dropdown-menu">
+              <%for(let i=0;i<car_types.length;i++) {%>
+                <li><button class="dropdown-item" name="type_buttons"><%=car_types[i].TYPE_NAME%></button></li>
+              <%}%>
+            </ul>
+          </li>
+        </ul>
+        <form class="d-flex" role="search" id="search" onsubmit="fetchResultsByName(event)" >
+          <input class="form-control me-2" type="search" placeholder="Search cars" aria-label="Search" id="searchBar" name="searchBar" required="true">
+          <button class="btn btn-outline-warning me-2"  type="submit" id="searchButton">Search</button>
+        </form>
+          <% if(authorized == "false") {%>
+            <form>
+              <button class="btn btn-outline-warning" type="submit" formaction="/login" formmethod="get">Login</button>
+            </form>
+          <%}%>
+          <% if(authorized == "true") {%>
+            <div class="circle-container" onclick="toggleSidebar()">
+              <div style="transform: scale(2); margin-top: -6px;">
+                <i class="bi bi-person" style="cursor: pointer;"></i> 
+              </div>
+            </div>
+
+            <div id="sidebar">
+              <button type="button" class="btn-close" onclick="toggleSidebar()" aria-label="Close"></button>
+              <!-- Add sidebar content here -->
+              <div class="user-info">
+                <h4><%=user.email%></h4>
+                <p>User ID: </p>
+              </div>
+            
+              <!-- Sidebar Buttons -->
+              <ul class="sidebar-buttons">
+                <li><i class="bi bi-house-door" name="sidebar_buttons"></i> Home</li>
+                <li><i class="bi bi-file-earmark-text" name="sidebar_buttons"></i> My Orders</li>
+                <li><i class="bi bi-person" name="sidebar_buttons"></i> My Information</li>
+                <li><i class="bi bi-cart" name="sidebar_buttons"></i> My Cart</li>
+                <li><i class="bi bi-box-arrow-right" name="sidebar_buttons"></i> Logout</li>
+              </ul>
+            </div>
+            
+
+            </div>
+          <%}%>
+      </div>
+    </div>
+  </nav>
+
+  <script>
+      var sidebar_buttons = document.getElementsByName('sidebar_buttons');
+      for(var i=0;i<sidebar_buttons;i++) {
+        sidebar_buttons[i].addEventListener('click',function() {
+          execute_sidebar(this);
+        })
+      }
+  </script>

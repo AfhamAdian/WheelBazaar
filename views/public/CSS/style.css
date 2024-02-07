@@ -1,0 +1,123 @@
+    #searchRes {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+        /* Style for each item */
+      .card {
+      width: calc(50% - 10px);
+      margin: 5px; /* Adjust margin as needed */
+      box-sizing: border-box;
+      border: 1px solid #8239f8; /* Optional: Add borders for better visibility */
+      padding: 10px; /* Optional: Add padding for better spacing */
+      box-shadow: 0 14px 28px rgba(0,0,0,0.25),
+                        0 10px 10px rgba(0,0,0,0.22);
+    }
+    #searchRes a {
+      text-decoration: none;
+      color: black;
+      font-size: x-large;
+      transition: color .1s ease;
+      font-weight: 600;
+    }
+    #searchRes a:hover{
+      color: red;
+    }
+
+       /* Dropdown items */
+       .dropdown-menu {
+      position: absolute;
+      top: 100%;
+      left: auto;
+      right:0;
+      display: none;
+      flex-direction: column;
+      min-width: 10rem;
+      padding: 0.5rem 0;
+      margin: 0.125rem 0 0;
+      font-size: 1rem;
+      color: #080b0e;
+      text-align: left;
+      list-style: none;
+      background-color: #100c0c;
+      background-clip: padding-box;
+      border: 1px solid rgba(0, 0, 0, 0.125);
+      border-radius: 0.25rem;
+    }
+
+    .dropdown-menu :hover{
+        background-color: rgb(245, 248, 247);
+        color: black;
+    }
+
+    /* Show dropdown when .show class is added */
+    .dropdown-menu.show {
+      display: flex;
+    }
+
+    #sidebar {
+      position: fixed;
+      top: 0;
+      right: -250px;
+      width: 250px;
+      height: 100%;
+      background-color: #0669fc;
+      transition: right 0.3s ease;
+      padding-top: 20px;
+      z-index: 2;
+    }
+
+    #sidebar .btn-close {
+      color: rgb(254, 252, 252);
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      font-size: 1.5rem;
+      cursor: pointer;
+    }
+
+    .circle-container {
+      position: relative;
+      width: 60px; /* Adjust the width and height for the circle */
+      height: 37px;
+      border-radius: 50%; /* Create a circular shape */
+      background-color: #f9fafb; /* Optional: Set background color */
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .user-info {
+  text-align: center;
+  color: white;
+}
+
+.user-info h3 {
+  margin-bottom: 10px;
+}
+
+.sidebar-buttons {
+  list-style: none;
+  padding: 0;
+}
+
+.sidebar-buttons li {
+  padding: 15px;
+  color: white;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.sidebar-buttons li:hover {
+  background-color: #0056b3;
+}
+
+.content {
+  margin-left: 250px;
+  padding: 15px;
+}
+
+#sidebar .bi {
+  vertical-align: middle;
+  margin-right: 5px;
+}
