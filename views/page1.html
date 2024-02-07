@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>
+            Home
+        </title>
+        <meta charset="UTF-8">
+        <style>
+            html {
+                font-size: 22px;
+            }
+            body{
+                background-color: #333;
+                color: white;
+            } 
+            .container{
+                width: 100%;
+                height: 10vh;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+            .form{
+                background-color: #fff;
+                width: 600px;
+                height: 55px;
+                display: flex;
+            }
+            form input{
+                flex: 1;
+                border: none;
+                outline: none;
+            }
+            form button{
+                background: tomato;
+                padding: 10px 50px;
+                border: none;
+                outline: none;
+                color: #fff;
+                letter-spacing: 1px;
+                cursor: pointer;
+            }
+            form .fa-search{
+                align-self: center;
+                padding: 10px 20px;
+                color: #777;
+            }
+            .addSection{
+                display: flex;
+                align-items: right;
+                justify-content: center;
+            }
+​
+        </style>
+        <script src="https://kit.fontawesome.com/c4254e24a8.js" crossorigin="anonymous"></script>
+​
+    </head>
+    <body>
+​
+        <div class="Heading">
+            <br>
+            <img src="images/logo-color-m.png" alt="" style="width: 200px;">
+        </div>
+        <div class="container">
+            <form class="form">
+                <i class="fas fa-search"></i>
+                <input type="text" name="searchBar" id="searchBar" placeholder="search">
+                <button type="submit" id="search">Search</button>
+            </form>
+            <script>
+                const formEl = document.querySelector('.form');
+​
+                formEl.addEventListener('submit',event=>{
+                        event.preventDefault();
+​
+                        const formData = new FormData(formEl);
+                        const data = Object.fromEntries(formData);
+                        fetch('/',{
+                            method:'POST',
+                            headers: {
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify(data)
+                        }).then(res=>res.json())
+                        .then(data=>{
+                            //console.log(data);
+                            document.getElementById("searchRes").innerHTML=" ";
+                            if(data.length == 0) 
+                            document.getElementById("searchRes").innerHTML='<h2 style="color: tomato">NOT FOUND</h2>';
+                            for(let i=0;i<data.length;i++) {
+                                document.getElementById("searchRes").innerHTML +="Name : " + data[i].NAME +"<br>" + "ID : " +data[i].ID + "<br>" +"<br>";
+                            }
+                        });
+                });
+            </script>
+        </div>
+        <hr>
+​
+        <div>
+            <ul id="searchRes">
+                
+            </ul>
+        </div>
+        <hr>
+        <div class="addContainer">
+            <br>
+            <article id="addSection">
+                <form class="addForm">
+                    <fieldset>
+                        <legend>Test</legend>
+                        <p>
+                            <label for="id">ID : </label>
+                            <input type="number" name="id" id="id" style="width: 300px;height: 22px;">
+                        </p>
+                        <p>
+                            <label for="name">New Password : </label>
+                            <input type="password" name="password" id="name" style="width: 300px;height: 22px;">
+                        </p>
+                        <p>
+                            <button type="submit" id="add" style="background-color: green;">Update</button>
+                        </p>
+                        <p>
+                            <button type="button" id="add" style="background-color: green;">Delete</button>
+                        </p>
+                    </fieldset>
+                </form>
+            </article>
+            <script>
+                const addFormEl = document.querySelector('.addForm');
+                addFormEl.addEventListener('submit',event=>{
+                       // event.preventDefault();
+​
+                        const addFormData = new FormData(addFormEl);
+                        const data = Object.fromEntries(addFormData);
+                        fetch('/updateTest',{
+                            method:'POST',
+                            headers: {
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify(data)
+                        }).then(res=>res.json())
+                        .then(data=>{
+                            console.log(data);
+                        });
+                });
+                addFormEl.addEventListener('button',event=>{
+                       // event.preventDefault();
+​
+                        const addFormData = new FormData(addFormEl);
+                        const data = Object.fromEntries(addFormData);
+                        fetch('/deleteTest',{
+                            method:'POST',
+                            headers: {
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify(data)
+                        }).then(res=>res.json())
+                        .then(data=>{
+                            console.log(data);
+                        });
+                });
+            </script>
+        </div>
+​
+    </body>
+​
+</html>

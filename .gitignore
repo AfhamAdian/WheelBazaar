@@ -1,0 +1,14 @@
+date-fns
+uuid
+lodash
+express
+oracledb
+ejs
+bootstrap
+cookie-parser
+jsonwebtoken
+dotenv
+
+.vscode
+
+node_modules/
