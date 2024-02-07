@@ -1,0 +1,45 @@
+git branch name - creates branch
+git branch - checks which branch i am on
+git checkout branchname - for switching branch
+
+
+
+work flow :
+
+create a branch
+git add 
+git commit 
+git push --set-upstream
+origin "branchname"		set upstream chould be used once, after that we can use push origin
+
+
+now go to github website and your changed branch
+create pull req
+
+now admin merges the pull req
+
+xome back to vs code :
+switch to main branch
+git pull
+delete branch locally : git branch -d "branchname"
+
+
+
+
+
+How to merge form vs cpe :::
+
+Step 1: Clone the repository or update your local repository with the latest changes.
+
+git pull origin main
+Step 2: Switch to the base branch of the pull request.
+
+git checkout main
+Step 3: Merge the head branch into the base branch.
+
+git merge readme-edit
+Step 4: Push the changes.
+
+git push -u origin main
+
+create pull req 
