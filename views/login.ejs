@@ -228,9 +228,9 @@
             })
             
             .then(response => response.json())
-            .then(data => {
-                if (data.message == 'Successful') {
-                    window.location.href = '/login/dashboard';
+            .then(data => {                                     // response ke data te nise
+                if (data.message == 'Login successful') {
+                    window.location.href = '/';
                 } else {
                     alert(data.message);
                 }

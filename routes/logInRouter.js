@@ -47,22 +47,23 @@ loginRouter
             console.log(email);
             console.log(password);
 
-            const bool = await authUser( email, password );
+            const bool = await authUser( email, password );         // checks if user is valid or not
             // const result = await sendUserData( email, password );
 
             if( bool == true ){
 
-                  const payLoad = {
+                const payLoad = {
                     email: email,
-                    password: password
+                    password: password,
                 }
 
                 const accessToken = jwt.sign( payLoad, process.env.ACCESS_TOKEN_SECRET );    
                 res.cookie('token', accessToken, { httpOnly: true , secure: false });
-                res.json ( { message: 'Successful' } );
+                res.cookie('isLoggedIn',true, { httpOnly: false , secure: false });
+                res.json ( { message: 'Login successful' } );
             }
             else{
-                res.json(  { message: 'Unsuccessful' } );
+                res.json(  { message: 'Invalid Email or Password' } );
             }
         }catch(err){
             console.log(err);

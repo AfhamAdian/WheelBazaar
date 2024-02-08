@@ -4,6 +4,8 @@ const path = require('path');
 const { result } = require('lodash');
 const { searchByCompany, searchByType, searchByName, test } = require('../controller/mainHome.js');
 const { type } = require('os');
+const authorization = require('../middlewares/authorization.js');
+const decodeTokenFromCookies = require('../utils/decodeToken.js');
 
 
 
@@ -25,14 +27,37 @@ const mainHomeRouter = express.Router();
 mainHomeRouter
     .route('/')
     .get( async (req,res) => 
-    {
-        const sql="SELECT TYPE_NAME,CAR_TYPE_URL FROM CARTYPE";
-        const sql2="SELECT NAME FROM USERS WHERE USER_TYPE = 'CO'";
-        const car_types=await execute(sql,{});
-        console.log(car_types);
-        const company_names=await execute(sql2,{});
-        console.log(company_names);
-        res.render('index',{car_types: car_types,company_names: company_names,authorized: "false",user:"user"});
+    {   
+        const isLoggedIn = req.cookies.isLoggedIn;          // flag to check if anyone is logged in or not
+
+        console.log("login status " + isLoggedIn);
+
+        if( isLoggedIn == 'false' || isLoggedIn == undefined )
+        {
+            const sql="SELECT TYPE_NAME,CAR_TYPE_URL FROM CARTYPE";
+            const sql2="SELECT NAME FROM USERS WHERE USER_TYPE = 'CO'";
+            const car_types=await execute(sql,{});
+            //console.log(car_types);
+            const company_names=await execute(sql2,{});
+            //console.log(company_names);
+            res.render('index',{car_types: car_types,company_names: company_names,authorized: "false",user:"user"});
+        }
+        else
+        {
+            console.log("user is logged in");
+            const token = req.cookies.token;
+            const user = decodeTokenFromCookies(token);
+            console.log("user: ", user);
+            
+            const sql="SELECT TYPE_NAME,CAR_TYPE_URL FROM CARTYPE";
+            const sql2="SELECT NAME FROM USERS WHERE USER_TYPE = 'CO'";
+            const car_types=await execute(sql,{});
+            //console.log(car_types);
+            const company_names=await execute(sql2,{});
+            //console.log(company_names);
+            res.render('index',{car_types: car_types,company_names: company_names,authorized: "true" , user: user});
+        }
+
     })
     .post( async (req, res) => {
         res.write("Post is sent");
