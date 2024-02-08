@@ -2,6 +2,7 @@ const express = require('express');
 const cookieParser = require('cookie-parser');
 const path = require('path');
 const jwt = require('jsonwebtoken');
+const { execute } = require('../DB/dbConnect.js');
 require('dotenv').config();
 
 const { authUser,sendUserData,sendUserDataByUserName } = require('../controller/logIn.js');
@@ -29,7 +30,7 @@ loginRouter
     .get( async(req,res) =>
     {
         // here we will render login.ejs page
-        res.render('login',{});
+        res.render('login',{authorized: "false"});
     })
 
     .post( async ( req, res ) => 
@@ -39,20 +40,20 @@ loginRouter
         // else show error message
         try{
             const {
-                username,
+                email,
                 password
             } = req.body;
 
-            console.log(username);
+            console.log(email);
             console.log(password);
 
-            const bool = await authUser( username, password );
-            const result = await sendUserData( username, password );
+            const bool = await authUser( email, password );
+            // const result = await sendUserData( email, password );
 
             if( bool == true ){
 
                   const payLoad = {
-                    username: username,
+                    email: email,
                     password: password
                 }
 
@@ -111,10 +112,16 @@ loginRouter
 
 loginRouter
     .route('/dashboard')
-    .get( authorization, async(req,res) =>
+    .get( authorization, async (req,res) =>
     {
         const user = req.user;
-        res.render('dashboard', { user : user } );
+        const sql="SELECT TYPE_NAME,CAR_TYPE_URL FROM CARTYPE";
+        const sql2="SELECT NAME FROM USERS WHERE USER_TYPE = 'CO'";
+        const car_types=await execute(sql,{});
+        console.log(car_types);
+        const company_names=await execute(sql2,{});
+        console.log(company_names);
+        res.render('index', {company_names:company_names,car_types:car_types,authorized: "true", user : user} );
     })
 
 module.exports = loginRouter;

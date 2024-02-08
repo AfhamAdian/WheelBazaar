@@ -32,74 +32,61 @@ mainHomeRouter
         console.log(car_types);
         const company_names=await execute(sql2,{});
         console.log(company_names);
-        res.render('index',{car_types: car_types,company_names: company_names,result: {}});
+        res.render('index',{car_types: car_types,company_names: company_names,authorized: "false",user:"user"});
     })
     .post( async (req, res) => {
         res.write("Post is sent");
     })
     
 mainHomeRouter
-    .route('/showBrandWise/:companyName')
+    .route('/showBrandWise')
     .get( async ( req, res ) => {
-        console.log("asche");
-        const {
-            companyName
-        } = req.params;
+        // console.log("asche");
+        // const companyName = req.body.buttonText;
 
-        console.log(companyName);
-
-        const result = await searchByCompany( companyName );
-        console.log( result );
-
-        const sql="SELECT TYPE_NAME,CAR_TYPE_URL FROM CARTYPE";
-        const sql2="SELECT NAME FROM USERS WHERE USER_TYPE = 'CO'";
-        const car_types=await execute(sql,{});
-        const company_names=await execute(sql2,{});
-        res.render('index',{car_types: car_types,company_names: company_names,result: result});
+        // console.log(companyName);
+        // test();
+        // const result = await searchByCompany( companyName );
+        // res.json(result);
     })
     .post( async ( req, res ) => {
         console.log("asche");
-        const {
-            companyName
-        } = req.params;
+        const companyName = req.body.buttonText;
 
         console.log(companyName);
         test();
-        const result = await searchByCompany( companyName );//
-        console.log( result );
-        res.send("ok");
+        const result = await searchByCompany( companyName );
+        res.json(result);
     })
 
 mainHomeRouter
-    .route('/showTypeWise/:typeName')
+    .route('/showTypeWise')
     .get( async ( req, res ) => {
-        console.log("asche");
-        const {
-            typeName
-        } = req.params;
+        // console.log("asche");
+        // const {
+        //     typeName
+        // } = req.params;
 
-        console.log(typeName);
+        // console.log(typeName);
 
-        const result = await searchByType( typeName );
-        console.log( result );
+        // const result = await searchByType( typeName );
+        // console.log( result );
 
-        const sql="SELECT TYPE_NAME,CAR_TYPE_URL FROM CARTYPE";
-        const sql2="SELECT NAME FROM USERS WHERE USER_TYPE = 'CO'";
-        const car_types=await execute(sql,{});
-        const company_names=await execute(sql2,{});
-        res.render('index',{car_types: car_types,company_names: company_names,result: result});
+        // const sql="SELECT TYPE_NAME,CAR_TYPE_URL FROM CARTYPE";
+        // const sql2="SELECT NAME FROM USERS WHERE USER_TYPE = 'CO'";
+        // const car_types=await execute(sql,{});
+        // const company_names=await execute(sql2,{});
+        // res.render('index',{car_types: car_types,company_names: company_names,result: result});
     })
     .post( async ( req, res ) => {
         //console.log("asche");
-        const {
-            typeName
-        } = req.params;
+        console.log("asche");
+        const typename = req.body.buttonText;
 
-        console.log(typeName);
+        console.log(typename);
         test();
-        const result = await searchByType( typeName );
-        console.log( result );
-        res.send("ok");
+        const result = await searchByType( typename );
+        res.json(result);
     })
 
     mainHomeRouter
@@ -107,19 +94,9 @@ mainHomeRouter
         .post( async ( req, res ) => 
         {
             console.log( 'post e dhukse ');
-            const {
-                carName
-            } = req.body;
-
-            console.log(req.body.searchBar);
-
-            const result = await searchByName(req.body.searchBar);
-            
-            const sql="SELECT TYPE_NAME,CAR_TYPE_URL FROM CARTYPE";
-            const sql2="SELECT NAME FROM USERS WHERE USER_TYPE = 'CO'";
-            const car_types=await execute(sql,{});
-            const company_names=await execute(sql2,{});
-            res.render('index',{car_types: car_types,company_names: company_names,result: result});
+            const carName= req.body.name;
+            const result = await searchByName(carName);
+            res.json(result);
         })
 
 

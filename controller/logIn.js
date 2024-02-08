@@ -21,15 +21,15 @@ async function sendUserDataByUserName ( username )
     }
 }
 
-async function authUser ( username, password )
+async function authUser ( email, password )
 {
     try{
         const sql =`
             SELECT *
             FROM USERS
-            WHERE (LOWER(REPLACE( NAME,' ', '')) = LOWER( REPLACE( :username, ' ', '' )) AND (PASSWORD = :password) )
+            WHERE (EMAIL = :email) AND (PASSWORD = :password)
         `
-        const binds = { username, password };
+        const binds = { email, password };
 
         const result = await execute( sql, binds );
 
@@ -42,15 +42,15 @@ async function authUser ( username, password )
     }
 }
  
-async  function sendUserData ( username, password )
+async  function sendUserData ( email, password )
 {
     try{
         const sql =`
             SELECT *
             FROM USERS
-            WHERE (LOWER(REPLACE( NAME,' ', '')) = LOWER( REPLACE( :username, ' ', '' )) AND (PASSWORD = :password) )
+            WHERE EMAIL = :email AND (PASSWORD = :password)
         `
-        const binds = { username, password };
+        const binds = { email, password };
 
         const result = await execute( sql, binds );
 
