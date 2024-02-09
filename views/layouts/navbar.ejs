@@ -52,21 +52,19 @@
               <button type="button" class="btn-close" onclick="toggleSidebar()" aria-label="Close"></button>
               <!-- Add sidebar content here -->
               <div class="user-info">
-                <h4><%=user.email%></h4>
-                <p>User ID: </p>
+                <h4><%=user_info[0].NAME%></h4>
+                <p>User ID: <%=user_info[0].ID%></p>
               </div>
             
               <!-- Sidebar Buttons -->
               <ul class="sidebar-buttons">
-                <li><i class="bi bi-house-door" name="sidebar_buttons"></i> Home</li>
-                <li><i class="bi bi-file-earmark-text" name="sidebar_buttons"></i> My Orders</li>
-                <li><i class="bi bi-person" name="sidebar_buttons"></i> My Information</li>
-                <li><i class="bi bi-cart" name="sidebar_buttons"></i> My Cart</li>
-
-                <li><a href="/logout"><i class="bi bi-box-arrow-right" name="logout"></i> Logout</a></li>              </ul>
+                <li><a href="/"><i class="bi bi-house-door" name="sidebar_buttons"></i> Home</a></li>
+                <li><a href=""><i class="bi bi-file-earmark-text" name="sidebar_buttons"></i> My Orders</a></li>
+                <li><a href=""><i class="bi bi-person" name="sidebar_buttons"></i> My Information</a></li>
+                <li><a href=""><i class="bi bi-cart" name="sidebar_buttons"></i> My Cart</a></li>
+                <li><a href="/logout"><i class="bi bi-box-arrow-right" name="logout"></i> Logout</a></li>             
+               </ul>
             </div>
-            
-
             </div>
           <%}%>
       </div>

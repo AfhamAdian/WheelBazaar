@@ -8,7 +8,8 @@ const authorization = require('../middlewares/authorization.js');
 const decodeTokenFromCookies = require('../utils/decodeToken.js');
 
 
-
+const {sendUserData} = require('../controller/logIn.js');
+const { Console } = require('console');
 // Assuming __dirname is the 'route' directory
 const routeDirectory = __dirname;
 //console.log('Route Directory:', routeDirectory);
@@ -40,7 +41,7 @@ mainHomeRouter
             //console.log(car_types);
             const company_names=await execute(sql2,{});
             //console.log(company_names);
-            res.render('index',{car_types: car_types,company_names: company_names,authorized: "false",user:"user"});
+            res.render('index',{car_types: car_types,company_names: company_names,authorized: "false",user:"user",user_info:[{ID: 0}]});
         }
         else
         {
@@ -54,8 +55,11 @@ mainHomeRouter
             const car_types=await execute(sql,{});
             //console.log(car_types);
             const company_names=await execute(sql2,{});
+            const email = user.email;
+            const password = user.password;
+            const user_info = await sendUserData(email,password);
             //console.log(company_names);
-            res.render('index',{car_types: car_types,company_names: company_names,authorized: "true" , user: user});
+            res.render('index',{car_types: car_types,company_names: company_names,authorized: "true" , user: user,user_info:user_info});
         }
 
     })
@@ -122,6 +126,22 @@ mainHomeRouter
             const carName= req.body.name;
             const result = await searchByName(carName);
             res.json(result);
+        })
+    mainHomeRouter
+        .route('/addtocart') 
+        .post(async(req,res)=> {
+            const {
+                model_color_id,
+                user_id
+            } = req.body;
+            console.log(model_color_id)
+            console.log(user_id)
+            res.json({message: "ok"})
+        })
+    mainHomeRouter
+        .route('/cardetails')
+        .get(async(req,res)=>{
+
         })
 
 
