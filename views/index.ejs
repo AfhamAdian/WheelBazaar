@@ -27,9 +27,20 @@
         }
 
         function addToCart(button) {
-        var car_id = button.dataset.info;
-        fetch('', {
-
+        var model_color_id = button.dataset.info;
+        var user_id = '<%=user_info[0].ID%>';
+        
+        fetch('/addtocart', {
+          method: 'POST',
+          headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({model_color_id,user_id})
+        }).then(res=>res.json())
+        .then(res=>{
+          if(res.message == "ok") {
+            alert("Successfully added to your cart");
+          }
         })
         }
 
@@ -40,15 +51,15 @@
         <div class="card mb-3">
         <div class="row no-gutters">
           <div class="col-md-4">
-            <a href="https://www.google.com/">
+            <a href="/cardetails">
               <img src="${data[i].CAR_IMAGE_URL}" class="card-img" style="height: 100%;"  alt="..." >
             </a>
           </div>
           <div class="col-md-8">
             <div class="card-body">
-              <a class="card-title" href="">${data[i].MODEL_NAME}</a>
+              <a class="card-title" href="/cardetails">${data[i].MODEL_NAME}</a>
               <p class="card-text">Price : ${data[i].PRICE}</p>
-              <button class="btn btn-primary" name="add_to_cart_button" data-info="${data[i].MODEL_COLOR_ID}">Add to cart</button>
+              <button class="btn btn-primary" name="add_to_cart_button" data-info="${data[i].MODEL_COLOR_ID}">Add to wishlist</button>
             </div>
           </div>
         </div>
@@ -58,7 +69,12 @@
 
         for(var i = 0;i<add_to_cart_buttons.length;i++) {
         add_to_cart_buttons[i].addEventListener('click',function(){
-          addToCart(this);
+          if('<%=authorized%>' == "true") {
+            addToCart(this);
+          }
+          else {
+            window.location.href = '/login';
+          }
         });
         }
         }
@@ -216,6 +232,14 @@
       transition: background-color 0.3s;
     }
 
+    .sidebar-buttons a {
+      padding: 15px;
+      color: white;
+      cursor: pointer;
+      transition: background-color 0.3s;
+      text-decoration: none;
+    }
+
     .sidebar-buttons li:hover {
       background-color: #0056b3;
     }
@@ -232,9 +256,9 @@
     </style>
   </head>
   <body>
-      <%-include('layouts/navbar.ejs',{company_names: company_names,car_types:car_types,authorized: authorized,user: user}) %>
+      <%-include('layouts/navbar.ejs',{company_names: company_names,car_types:car_types,authorized: authorized,user: user,user_info:user_info}) %>
       <div class="container" id="searchRes">
-        
+
       </div>
       <script>
         // Get all buttons with the common class

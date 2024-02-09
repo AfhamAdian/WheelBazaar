@@ -27,7 +27,7 @@ async function authUser ( email, password )
         const sql =`
             SELECT *
             FROM USERS
-            WHERE (EMAIL = :email) AND (PASSWORD = :password)
+            WHERE (EMAIL = :email) AND (PASSWORD = :password) AND USER_TYPE LIKE 'CU'
         `
         const binds = { email, password };
 
@@ -53,6 +53,7 @@ async  function sendUserData ( email, password )
         const binds = { email, password };
 
         const result = await execute( sql, binds );
+        return result;
 
     }catch(err){
         console.log(err);
