@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="en">
-<>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Car Details</title>
@@ -8,134 +7,111 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@v1.11.3/font/bootstrap-icons.css" rel="stylesheet">
     <link href="https://getbootstrap.com/docs/5.3/assets/css/docs.css" rel="stylesheet">
+    <link rel="stylesheet" href="CSS/style.css">
+    <script src="script/script.js"></script>
 
     <style>
-    .dropdown-menu {
-        position: absolute;
-        top: 100%;
-        left: auto;
-        right:0;
-        display: none;
-        flex-direction: column;
-        min-width: 10rem;
-        padding: 0.5rem 0;
-        margin: 0.125rem 0 0;
-        font-size: 1rem;
-        color: #080b0e;
-        text-align: left;
-        list-style: none;
-        background-color: #100c0c;
-        background-clip: padding-box;
-        border: 1px solid rgba(0, 0, 0, 0.125);
-        border-radius: 0.25rem;
-      }
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f8f9fa;
+            margin: 0;
+            padding: 0;
+        }
 
-      .dropdown-menu :hover{
-          background-color: rgb(245, 248, 247);
-          color: black;
-      }
+        .car-details-container {
+            max-width: 1000px;
+            margin: 20px auto;
+            background-color: #fcfbfb;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
 
-      /* Show dropdown when .show class is added */
-      .dropdown-menu.show {
-        display: flex;
-      }
+        .car-image {
+            width: 100%;
+            max-height: 400px;
+            object-fit: cover;
+        }
 
-      #sidebar {
-        position: fixed;
-        top: 0;
-        right: -250px;
-        width: 250px;
-        height: 100%;
-        background-color: #0669fc;
-        transition: right 0.3s ease;
-        padding-top: 20px;
-        z-index: 2;
-      }
+        .car-name {
+            font-size: 32px;
+            color: #333;
+            margin-top: 15px;
+        }
 
-      #sidebar .btn-close {
-        color: rgb(254, 252, 252);
-        position: absolute;
-        top: 10px;
-        right: 10px;
-        font-size: 1.5rem;
-        cursor: pointer;
-      }
+        .car-type {
+            font-size: 18px;
+            margin-top: 5px;
+        }
 
-      .circle-container {
-        position: relative;
-        width: 40px; /* Adjust the width and height for the circle */
-        height: 37px;
-        border-radius: 50%; /* Create a circular shape */
-        background-color: #f9fafb; /* Optional: Set background color */
-        display: flex;
-        justify-content: center;
-        align-items: center;
-      }
+        .car-company {
+            font-size: 18px;
+            margin-top: 5px;
+        }
+        .car-company a{
+          color:#333;
+          text-decoration: none;
+        }
 
-      .user-info {
-    text-align: center;
-    color: white;
-  }
+        .car-type a {
+          color: #333;
+          text-decoration: none;
+        }
+        .car-company a:hover{
+          color: red;
+        }
+        .car-type a:hover{
+          color: red;
+        }
 
-  .user-info h3 {
-    margin-bottom: 10px;
-  }
+        .car-price {
+            font-size: 20px;
+            color: #e44d26;
+            margin-top: 10px;
+        }
 
-  .sidebar-buttons {
-    list-style: none;
-    padding: 0;
-  }
+        .car-details {
+            margin-top: 20px;
+        }
 
-  .sidebar-buttons li {
-    padding: 15px;
-    color: white;
-    cursor: pointer;
-    transition: background-color 0.3s;
-  }
-
-  .sidebar-buttons a {
-    padding: 15px;
-    color: white;
-    cursor: pointer;
-    transition: background-color 0.3s;
-    text-decoration: none;
-  }
-
-  .sidebar-buttons li:hover {
-    background-color: #0056b3;
-  }
-
-  .content {
-    margin-left: 250px;
-    padding: 15px;
-  }
-
-  #sidebar .bi {
-    vertical-align: middle;
-    margin-right: 5px;
-  }
-
-</style>
-
+        .add-to-cart-btn {
+            display: block;
+            width: 100%;
+            padding: 10px;
+            background-color: #e44d26;
+            color: #fff;
+            text-align: center;
+            text-decoration: none;
+            font-size: 18px;
+            margin-top: 20px;
+            border: none;
+            cursor: pointer;
+        }
+    </style>
 
 </head>
 <body>
-    <%-include('layouts/navbar.ejs',{company_names: company_names,car_types: car_types,authorized: authorized,user: user,user_info:user_info}) %>
-    <div class="container mt-4">
-        <div class="row">
-          <div class="col-md-6">
-            <img src="" alt="Product Image" class="product-image img-fluid">
-          </div>
-          <div class="col-md-6 product-info">
-            <h2>Car Name: <%=product[0].MODEL_NAME%> </h2>
-            <p><strong>Price:</strong> $X.XX</p>
-            <p><strong>Category:</strong>Best Category</p>
-            <p>Brand: <%=company_names[0].NAME%></p>
-            <p><strong>Description:</strong>this is your dream car</p>
-            <button class="btn btn-primary">Add to wishlist</button>
-          </div>
-        </div>
+    <%-include('layouts/navbar2.ejs',{authorized: authorized,user_info:user_info}) %>
+    <div class="container car-details-container">
+      <img src="<%=product[0].CAR_IMAGE_URL%>" alt="Car Image" class="img-fluid car-image">
+      <h1 class="car-name"><%=product[0].MODEL_NAME%></h1>
+      <p class="car-type"><a href="<%=product[0].CAR_TYPE_URL%>"><%=product[0].TYPE_NAME%></a></p>
+      <p class="car-company"><a href="<%=product[0].COMPANY_URL%>"><%=product[0].NAME%></a></p>
+      <p class="car-price">BDT <%=product[0].PRICE%></p>
+      <div class="car-details">
+          <p><strong>Color:</strong> <%=product[0].COLOR%></p>
+          <%if(product[0].STOCK != 0 ) {%>
+            <p><strong>Stock:</strong> <span style="color: #218838;font-weight: bold;">In Stock</span></p>
+          <%}%>
+          <%if(product[0].STOCK = 0 ) {%>
+            <p><strong>Stock:</strong> <span style="color: red;font-weight: bold;">Out Of Stock</span></p>
+          <%}%>
+          <p><strong>Seat Capacity:</strong> <%=product[0].SEAT_CAP%> seats</p>
+          <p><strong>Engine Capacity:</strong> <%=product[0].ENGINE_CAP%>cc</p>
+          <p><strong>Warranty:</strong> <%=product[0].WARRANTY%> years</p>
+          <p><strong>Launch Date:</strong> <%=product[0].LAUNCH_DATE%></p>
       </div>
+      <button class="add-to-cart-btn">Add to Wishlist</button>
+  </div>
       <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
 </body>
 </html>

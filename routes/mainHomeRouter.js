@@ -8,7 +8,7 @@ const authorization = require('../middlewares/authorization.js');
 const decodeTokenFromCookies = require('../utils/decodeToken.js');
 
 
-const {sendUserData} = require('../controller/logIn.js');
+const {sendUserData, sendUserDataByID } = require('../controller/logIn.js');
 const { Console } = require('console');
 // Assuming __dirname is the 'route' directory
 const routeDirectory = __dirname;
@@ -24,6 +24,8 @@ const filePathInView = path.join(viewDirectory, 'page1.html');
 
 
 const mainHomeRouter = express.Router();
+let company_names;
+let car_types;
 
 mainHomeRouter
     .route('/')
@@ -37,9 +39,9 @@ mainHomeRouter
         {
             const sql="SELECT TYPE_NAME,CAR_TYPE_URL FROM CARTYPE";
             const sql2="SELECT NAME FROM USERS WHERE USER_TYPE = 'CO'";
-            const car_types=await execute(sql,{});
+            car_types=await execute(sql,{});
             //console.log(car_types);
-            const company_names=await execute(sql2,{});
+            company_names=await execute(sql2,{});
             //console.log(company_names);
             res.render('index',{car_types: car_types,company_names: company_names,authorized: "false",user:"user",user_info:[{ID: 0}]});
         }
@@ -52,9 +54,9 @@ mainHomeRouter
             
             const sql="SELECT TYPE_NAME,CAR_TYPE_URL FROM CARTYPE";
             const sql2="SELECT NAME FROM USERS WHERE USER_TYPE = 'CO'";
-            const car_types=await execute(sql,{});
+            car_types=await execute(sql,{});
             //console.log(car_types);
-            const company_names=await execute(sql2,{});
+            company_names=await execute(sql2,{});
             const email = user.email;
             const password = user.password;
             const user_info = await sendUserData(email,password);
@@ -141,8 +143,26 @@ mainHomeRouter
     mainHomeRouter
         .route('/cardetails')
         .get(async(req,res)=>{
-
+            var car_id = req.query.car_id;
+            var user_id = req.query.user_id;
+            const sql = `
+            SELECT * FROM CARS C
+            JOIN COMPANY CO ON C.COMPANY_ID = CO.ID
+            JOIN CARTYPE CA ON C.TYPE_ID = CA.TYPE_ID
+            JOIN USERS U ON C.COMPANY_ID = U.ID
+            WHERE C.MODEL_COLOR_ID = :car_id`
+            const binds = {car_id};
+            const product = await execute(sql,binds);
+            var authorized;
+            if(user_id == 0) {
+                authorized = "false";
+                res.render('car_details',{authorized:authorized,user_info:[{ID: 0}],product:product})
+            }
+            else {
+                authorized = "true";
+                const user_info = await sendUserDataByID(user_id);
+                res.render('car_details',{authorized:authorized,user_info:user_info,product:product})
+            }
         })
 
-
-    module.exports = mainHomeRouter;//
+    module.exports = mainHomeRouter;

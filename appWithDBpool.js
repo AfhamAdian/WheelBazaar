@@ -1,4 +1,5 @@
 const express = require('express');
+const path = require('path')
 const cookieParser = require('cookie-parser'); 
 const morgan = require('morgan');
 const dotenv = require('dotenv');
@@ -6,6 +7,7 @@ const oracledb = require('./DB/dbConnect.js');
 
 const app = express();
 app.set("view engine","ejs");
+app.use(express.static(path.join(__dirname, 'views/public')));
 
 app.use(express.json());
 app.use(cookieParser());
@@ -35,7 +37,7 @@ const employeeRouter = require('./routes/empRouter.js');
 app.use('/emp',employeeRouter);
 
 app.use('/login', require('./routes/logInRouter.js'));
-// app.use('/signup', require('./routes/signUpRouter.js'));
+app.use('/signup', require('./routes/signUpRouter.js'));
 app.use('/logout', require('./routes/logOutRouter.js'));
 
 
