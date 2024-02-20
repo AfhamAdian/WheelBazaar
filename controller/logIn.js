@@ -21,6 +21,25 @@ async function sendUserDataByUserName ( username )
     }
 }
 
+async function sendUserDataByID ( user_id )
+{
+    try{
+        const sql =`
+            SELECT *
+            FROM USERS
+            WHERE ID = :user_id
+        `
+        const binds = { user_id };
+
+        const result = await execute( sql, binds );
+
+        return result;
+    }catch(err){
+        console.log(err);
+    }
+}
+
+
 async function authUser ( email, password )
 {
     try{
@@ -63,5 +82,6 @@ async  function sendUserData ( email, password )
 module.exports = {
     authUser,
     sendUserData,
-    sendUserDataByUserName
+    sendUserDataByUserName,
+    sendUserDataByID
 }

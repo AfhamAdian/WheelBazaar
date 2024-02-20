@@ -9,33 +9,7 @@
           <li class="nav-item">
             <a class="nav-link active" aria-current="page" href="/">Home</a>
           </li>
-          <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle" href="" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-              Brands
-            </a>
-            <ul class="dropdown-menu">
-              <%for(let i=0;i<company_names.length;i++) {%>
-                <li>
-                  <button class="dropdown-item" name="brand_buttons"><%=company_names[i].NAME%></button>
-              </li>
-              <%}%>
-            </ul>
-          </li>
-          <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle" href="" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-              Car types
-            </a>
-            <ul class="dropdown-menu">
-              <%for(let i=0;i<car_types.length;i++) {%>
-                <li><button class="dropdown-item" name="type_buttons"><%=car_types[i].TYPE_NAME%></button></li>
-              <%}%>
-            </ul>
-          </li>
         </ul>
-        <form class="d-flex" role="search" id="search" onsubmit="fetchResultsByName(event,'<%=user_info[0].ID%>')" >
-          <input class="form-control me-2" type="search" placeholder="Search cars" aria-label="Search" id="searchBar" name="searchBar" required="true">
-          <button class="btn btn-outline-warning me-2"  type="submit" id="searchButton">Search</button>
-        </form>
           <% if(authorized == "false") {%>
             <form>
               <button class="btn btn-outline-warning" type="submit" formaction="/login" formmethod="get">Login</button>

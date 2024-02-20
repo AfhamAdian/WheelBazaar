@@ -7,256 +7,12 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@v1.11.3/font/bootstrap-icons.css" rel="stylesheet">
     <link href="https://getbootstrap.com/docs/5.3/assets/css/docs.css" rel="stylesheet">
+    <script src="script/script.js"></script>
+    <link rel="stylesheet" href="CSS/style.css">
 
-    <script>
-      function fetchResultsByName(event) {
-        event.preventDefault();
-        const name = document.getElementById('searchBar').value;
-        console.log(name);
-        fetch('/searchByCarName',{
-        method: 'POST',
-        headers: {
-              'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({name})
-        })
-        .then(res=>res.json())
-        .then(data=>{
-          generateProdecuts(data);
-        })
-        }
-
-        function addToCart(button) {
-        var model_color_id = button.dataset.info;
-        var user_id = '<%=user_info[0].ID%>';
-        
-        fetch('/addtocart', {
-          method: 'POST',
-          headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({model_color_id,user_id})
-        }).then(res=>res.json())
-        .then(res=>{
-          if(res.message == "ok") {
-            alert("Successfully added to your cart");
-          }
-        })
-        }
-
-        function generateProdecuts(data) {
-          document.getElementById('searchRes').innerHTML="";
-        for(let i=0;i<data.length;i++) {
-        document.getElementById('searchRes').innerHTML+=`
-        <div class="card mb-3">
-        <div class="row no-gutters">
-          <div class="col-md-4">
-            <a href="/cardetails">
-              <img src="${data[i].CAR_IMAGE_URL}" class="card-img" style="height: 100%;"  alt="..." >
-            </a>
-          </div>
-          <div class="col-md-8">
-            <div class="card-body">
-              <a class="card-title" href="/cardetails">${data[i].MODEL_NAME}</a>
-              <p class="card-text">Price : ${data[i].PRICE}</p>
-              <button class="btn btn-primary" name="add_to_cart_button" data-info="${data[i].MODEL_COLOR_ID}">Add to wishlist</button>
-            </div>
-          </div>
-        </div>
-        </div>`
-        }
-        var add_to_cart_buttons = document.getElementsByName('add_to_cart_button');
-
-        for(var i = 0;i<add_to_cart_buttons.length;i++) {
-        add_to_cart_buttons[i].addEventListener('click',function(){
-          if('<%=authorized%>' == "true") {
-            addToCart(this);
-          }
-          else {
-            window.location.href = '/login';
-          }
-        });
-        }
-        }
-
-
-        function fetchResultsBrand(button) {
-        // Access the text content of the clicked button
-        var buttonText = button.textContent || button.innerText;
-        console.log(buttonText);
-        // Log or perform other actions with the button text
-        fetch('/showBrandWise',{
-        method: 'POST',
-        headers: {
-              'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({buttonText})
-        })
-        .then(res=>res.json())
-        .then(data=>{
-          generateProdecuts(data);
-        })
-        }
-        
-        function fetchResultsType(button) {
-        // Access the text content of the clicked button
-        var buttonText = button.textContent || button.innerText;
-        //console.log(buttonText);
-        // Log or perform other actions with the button text
-        fetch('/showTypeWise',{
-        method: 'POST',
-        headers: {
-              'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({buttonText})
-        })
-        .then(res=>res.json())
-        .then(data=>{
-          generateProdecuts(data);
-        })
-        }
-
-        function toggleSidebar() {
-        var sidebar = document.getElementById('sidebar');
-        sidebar.style.right= sidebar.style.right === '0px' ? '-250px' : '0px';
-        }
-    </script>
-    <style>
-          #searchRes {
-          display: flex;
-          flex-wrap: wrap;
-          justify-content: center;
-        }
-            /* Style for each item */
-          .card {
-          width: calc(50% - 10px);
-          margin: 5px; /* Adjust margin as needed */
-          box-sizing: border-box;
-          border: 1px solid #8239f8; /* Optional: Add borders for better visibility */
-          padding: 10px; /* Optional: Add padding for better spacing */
-          box-shadow: 0 14px 28px rgba(0,0,0,0.25),
-                            0 10px 10px rgba(0,0,0,0.22);
-        }
-        #searchRes a {
-          text-decoration: none;
-          color: black;
-          font-size: x-large;
-          transition: color .1s ease;
-          font-weight: 600;
-        }
-        #searchRes a:hover{
-          color: red;
-        }
-
-          /* Dropdown items */
-          .dropdown-menu {
-          position: absolute;
-          top: 100%;
-          left: auto;
-          right:0;
-          display: none;
-          flex-direction: column;
-          min-width: 10rem;
-          padding: 0.5rem 0;
-          margin: 0.125rem 0 0;
-          font-size: 1rem;
-          color: #080b0e;
-          text-align: left;
-          list-style: none;
-          background-color: #100c0c;
-          background-clip: padding-box;
-          border: 1px solid rgba(0, 0, 0, 0.125);
-          border-radius: 0.25rem;
-        }
-
-        .dropdown-menu :hover{
-            background-color: rgb(245, 248, 247);
-            color: black;
-        }
-
-        /* Show dropdown when .show class is added */
-        .dropdown-menu.show {
-          display: flex;
-        }
-
-        #sidebar {
-          position: fixed;
-          top: 0;
-          right: -250px;
-          width: 250px;
-          height: 100%;
-          background-color: #0669fc;
-          transition: right 0.3s ease;
-          padding-top: 20px;
-          z-index: 2;
-        }
-
-        #sidebar .btn-close {
-          color: rgb(254, 252, 252);
-          position: absolute;
-          top: 10px;
-          right: 10px;
-          font-size: 1.5rem;
-          cursor: pointer;
-        }
-
-        .circle-container {
-          position: relative;
-          width: 40px; /* Adjust the width and height for the circle */
-          height: 37px;
-          border-radius: 50%; /* Create a circular shape */
-          background-color: #f9fafb; /* Optional: Set background color */
-          display: flex;
-          justify-content: center;
-          align-items: center;
-        }
-
-        .user-info {
-      text-align: center;
-      color: white;
-    }
-
-    .user-info h3 {
-      margin-bottom: 10px;
-    }
-
-    .sidebar-buttons {
-      list-style: none;
-      padding: 0;
-    }
-
-    .sidebar-buttons li {
-      padding: 15px;
-      color: white;
-      cursor: pointer;
-      transition: background-color 0.3s;
-    }
-
-    .sidebar-buttons a {
-      padding: 15px;
-      color: white;
-      cursor: pointer;
-      transition: background-color 0.3s;
-      text-decoration: none;
-    }
-
-    .sidebar-buttons li:hover {
-      background-color: #0056b3;
-    }
-
-    .content {
-      margin-left: 250px;
-      padding: 15px;
-    }
-
-    #sidebar .bi {
-      vertical-align: middle;
-      margin-right: 5px;
-    }
-    </style>
   </head>
   <body>
-      <%-include('layouts/navbar.ejs',{company_names: company_names,car_types:car_types,authorized: authorized,user: user,user_info:user_info}) %>
+      <%-include('layouts/navbar.ejs',{company_names: company_names,car_types:car_types,authorized: authorized,user_info:user_info}) %>
       <div class="container" id="searchRes">
 
       </div>
@@ -267,7 +23,7 @@
         for (var i = 0; i < brand_buttons.length; i++) {
           brand_buttons[i].addEventListener('click', function() {
             // Call the common function when any button is clicked
-            fetchResultsBrand(this);
+            fetchResultsBrand(this,'<%=user_info[0].ID%>');
           });
         }
 
@@ -276,7 +32,7 @@
         for (var i = 0; i < type_buttons.length; i++) {
           type_buttons[i].addEventListener('click', function() {
             // Call the common function when any button is clicked
-            fetchResultsType(this);
+            fetchResultsType(this,'<%=user_info[0].ID%>');
           });
         }
 
