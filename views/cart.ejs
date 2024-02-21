@@ -1,14 +1,41 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Cart</title>
+    <title>Page Title</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body>
-    <h1>Cart Details</h1>
-    <ul>
-        <% for(let item of cartItems) { %>
-            <li><%= item.name %> - <%= item.price %></li>
+    <div class="container">
+        <% for(let i = 0; i < array.length; i++) { %>
+            <div class="card mt-3">
+                <div class="card-body">
+                    <h5 class="card-title"><%= array[i].name %></h5>
+                    <p class="card-text">Count: <span id="count-<%= array[i].id %>"><%= array[i].count %></span></p>
+                    <button class="btn btn-primary" onclick="increment('<%= array[i].id %>')">Increment</button>
+                    <button class="btn btn-secondary" onclick="decrement('<%= array[i].id %>')">Decrement</button>
+                </div>
+            </div>
         <% } %>
-    </ul>
+    </div>
+
+    <script>
+        function increment(id) {
+            const countElement = document.getElementById('count-' + id);
+            let count = Number(countElement.innerText);
+            count++;
+            countElement.innerText = count;
+            // Here you can send a request to your backend to update the count in your database
+        }
+
+        function decrement(id) {
+            const countElement = document.getElementById('count-' + id);
+            let count = Number(countElement.innerText);
+            if (count > 0) {
+                count--;
+                countElement.innerText = count;
+                // Here you can send a request to your backend to update the count in your database
+            }
+        }
+    </script>
 </body>
 </html>

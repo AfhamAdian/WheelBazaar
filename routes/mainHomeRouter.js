@@ -116,7 +116,7 @@ mainHomeRouter
         const typename = req.body.buttonText;
 
         console.log(typename);
-        //test();
+        test();
         const result = await searchByType( typename );
         res.json(result);
     })
