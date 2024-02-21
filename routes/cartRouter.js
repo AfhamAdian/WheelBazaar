@@ -23,7 +23,6 @@ cartRouter
         const cartInfo = await getCartInfo(userID);
         console.log("cartInfo: ", cartInfo);
         
-        const carInfo = 
         res.status(200).json( { cartInfo } );
         //res.render('cart',{ email, password } );
     });
