@@ -39,7 +39,7 @@ app.use('/emp',employeeRouter);
 app.use('/login', require('./routes/logInRouter.js'));
 app.use('/signup', require('./routes/signUpRouter.js'));
 app.use('/logout', require('./routes/logOutRouter.js'));
-
+app.use('/cart', require('./routes/cartRouter.js'));
 
 
 /// 404 Page Ridercting 

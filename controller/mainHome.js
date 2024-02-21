@@ -83,10 +83,32 @@ async function searchByName(carName)
     }
 }
 
+async function addToCart( model_color_id, user_id , status)
+{
+    try{
+        
+        const sql =`
+        BEGIN
+            DBMS_OUTPUT.PUT_LINE ( addToCart(:model_color_id,:user_id,:status) );
+        END;
+        `;
+
+        const binds = { model_color_id, user_id, status };
+        const result = await execute( sql, binds );
+        return result;
+    }catch(err){
+        console.log("\nadd to cart failed\n" );
+        console.log(err);
+    }
+}
+
+
+
+
 function test ()
 {
     console.log("test ashe");
 }
 
 
-module.exports = { searchByCompany, searchByType , searchByName, test };
+module.exports = { searchByCompany, searchByType , searchByName, test, addToCart };

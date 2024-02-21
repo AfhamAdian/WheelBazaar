@@ -31,3 +31,6 @@ BEGIN
         END IF;
     END IF;
 END check_signup_criteria;
+
+
+

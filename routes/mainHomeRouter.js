@@ -3,6 +3,7 @@ const { execute } = require('../DB/dbConnect.js');
 const path = require('path');
 const { result } = require('lodash');
 const { searchByCompany, searchByType, searchByName, test } = require('../controller/mainHome.js');
+const { addToCart } = require('../controller/mainHome.js');
 const { type } = require('os');
 const authorization = require('../middlewares/authorization.js');
 const decodeTokenFromCookies = require('../utils/decodeToken.js');
@@ -115,7 +116,7 @@ mainHomeRouter
         const typename = req.body.buttonText;
 
         console.log(typename);
-        test();
+        //test();
         const result = await searchByType( typename );
         res.json(result);
     })
@@ -130,7 +131,7 @@ mainHomeRouter
             res.json(result);
         })
     mainHomeRouter
-        .route('/addtocart') 
+        .route('/addtocart')
         .post(async(req,res)=> {
             const {
                 model_color_id,
@@ -138,6 +139,10 @@ mainHomeRouter
             } = req.body;
             console.log(model_color_id)
             console.log(user_id)
+            
+            const status = "NOT_CONFIRMED";                             // not confirmed status when addin to cart
+                                                                        // willbe confirmed when the user confirms the order
+            const ans = addToCart( model_color_id, user_id, status );
             res.json({message: "ok"})
         })
     mainHomeRouter

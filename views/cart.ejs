@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Cart</title>
+</head>
+<body>
+    <h1>Cart Details</h1>
+    <ul>
+        <% for(let item of cartItems) { %>
+            <li><%= item.name %> - <%= item.price %></li>
+        <% } %>
+    </ul>
+</body>
+</html>

@@ -51,7 +51,7 @@ const execute = async ( sql, binds) => {
         connection = await oracledb.getConnection();
         resultQuery = await connection.execute( sql, binds );
 
-        console.log(resultQuery.rows);
+        // console.log(resultQuery.rows);
         console.log("SQL query Result returned Successfully" + '\n');
 
         return resultQuery.rows;                                // returns data trom DATABASE table

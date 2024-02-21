@@ -20,18 +20,20 @@
         var model_color_id = button.dataset.info;
         var user_id = id;
         
-        // fetch('/addtocart', {
-        //   method: 'POST',
-        //   headers: {
-        //         'Content-Type': 'application/json'
-        //     },
-        //     body: JSON.stringify({model_color_id,user_id})
-        // }).then(res=>res.json())
-        // .then(res=>{
-        //   if(res.message == "ok") {
-        //     alert("Successfully added to your cart");
-        //   }
-        // })
+        fetch('/addtocart', {
+          method: 'POST',
+          headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({model_color_id,user_id})
+        }).then(res=>res.json())
+        .then(res=>{
+          if(res.message == "ok") {
+            
+            // alert("Successfully added to your cart");
+          }
+        })
+        
       }
 
       function generateProdecuts(data,id) {
@@ -61,8 +63,11 @@
           add_to_cart_buttons[i].addEventListener('click',function(){
             if(id != 0) {
               addToCart(this,id);
+              console.log( "added to cart" );
+              alert( "Added to cart" );
             }
             else {
+              alert( "Please login to add to cart" );
               window.location.href = '/login';
             }
           });
