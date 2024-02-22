@@ -10,7 +10,9 @@ async function getCartInfo( user_id )
         SELECT *
         FROM CART cart
         JOIN CARS cars ON ( cart.MODEL_COLOR_ID = cars.MODEL_COLOR_ID )
-        WHERE cart.CUSTOMER_ID = :user_id
+        JOIN USERS com ON (cars.COMPANY_ID = com.ID)
+        JOIN CARTYPE ct ON (cars.TYPE_ID = ct.TYPE_ID)
+		WHERE cart.CUSTOMER_ID = :user_id
         `;
         const binds = { user_id };
 
@@ -22,5 +24,39 @@ async function getCartInfo( user_id )
     }
 }
 
+async function increment(cart_id,cnt) {
+    try{
+        const sql =`
+        UPDATE CART
+        SET CAR_COUNT = :cnt
+        WHERE CART_ID = :cart_id
+        `;
+        const binds = { cnt,cart_id };
 
-module.exports = { getCartInfo };
+        const result = await execute( sql, binds );
+
+        return result;
+    }catch(err){
+        console.log(err);
+    }
+}
+
+async function decrement(cart_id,cnt) {
+    try{
+        const sql =`
+        BEGIN
+            decrementCart(:cart_id,:cnt);
+        END;
+        `;
+        const binds = { cart_id,cnt };
+
+        const result = await execute( sql, binds );
+
+        return result;
+    }catch(err){
+        console.log(err);
+    }
+}
+
+
+module.exports = { getCartInfo,increment,decrement };
