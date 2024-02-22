@@ -13,9 +13,12 @@
   </head>
   <body>
       <%-include('layouts/navbar.ejs',{company_names: company_names,car_types:car_types,authorized: authorized,user_info:user_info}) %>
-      <div class="container" id="searchRes">
+      <main>
+        <div class="container" id="searchRes">
 
-      </div>
+        </div>
+      </main>
+      <%-include('layouts/footer.ejs',{})%>
       <script>
         // Get all buttons with the common class
         var brand_buttons = document.getElementsByName('brand_buttons');

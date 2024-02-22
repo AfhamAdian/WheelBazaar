@@ -1,3 +1,11 @@
+body {
+  margin: 0;
+  padding: 0;
+  font-family: 'Arial', sans-serif;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
 #searchRes {
   display: flex;
   flex-wrap: wrap;
@@ -128,4 +136,26 @@ padding: 15px;
 #sidebar .bi {
 vertical-align: middle;
 margin-right: 5px;
+}
+
+main {
+  flex: 1; /* Allow the main content to take up remaining space */
+  padding: 20px;
+}
+
+footer {
+  background-color: #333;
+  color: #fff;
+  padding: 20px;
+  text-align: center;
+}
+
+.footer-links {
+  margin-top: 10px;
+}
+
+.footer-links a {
+  color: #fff;
+  margin: 0 15px;
+  text-decoration: none;
 }
