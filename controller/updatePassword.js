@@ -10,7 +10,7 @@ async function updatePassword ( username, password )
 {
     try{
 
-        const sql =`
+        const sql = `
             UPDATE USERS
             SET PASSWORD = :password
             WHERE (LOWER(REPLACE( NAME,' ', '')) = LOWER( REPLACE( :username, ' ', '' )) )

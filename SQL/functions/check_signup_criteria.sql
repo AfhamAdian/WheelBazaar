@@ -1,6 +1,3 @@
-
--- make sure to grant create procedure privilege to your database schema before creating the functions
-
 CREATE OR REPLACE FUNCTION check_signup_criteria(
     in_email IN VARCHAR2,
     in_phone IN VARCHAR2
@@ -31,6 +28,3 @@ BEGIN
         END IF;
     END IF;
 END check_signup_criteria;
-
-
-
