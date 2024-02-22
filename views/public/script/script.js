@@ -30,7 +30,7 @@
         .then(res=>{
           if(res.message == "ok") {
             
-            // alert("Successfully added to your cart");
+            alert( "Added to cart" );
           }
         })
         
@@ -64,7 +64,6 @@
             if(id != 0) {
               addToCart(this,id);
               console.log( "added to cart" );
-              alert( "Added to cart" );
             }
             else {
               alert( "Please login to add to cart" );
