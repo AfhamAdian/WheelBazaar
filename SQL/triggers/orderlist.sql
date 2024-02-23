@@ -1,14 +1,9 @@
--- CART_ORDERED trigger
--- REUDCES STOCK WHEN A CAR IS ORDERED
-CREATE OR REPLACE TRIGGER CART_ORDERED 
-AFTER INSERT
-ON orderlist
-FOR EACH ROW
 DECLARE 
     amount NUMBER(5);
     cart_id NUMBER(15);
+		ordered_amount NUMBER;
 BEGIN 
-    SELECT cars.STOCK, cart.CART_ID INTO amount, cart_id
+    SELECT cars.STOCK, cart.CART_ID, cart.CAR_COUNT INTO amount, cart_id, ordered_amount
     FROM CARS cars
     JOIN CART cart ON ( cars.MODEL_COLOR_ID = cart.MODEL_COLOR_ID )
     WHERE cart.CART_ID = :NEW.CART_ID;
@@ -17,7 +12,7 @@ BEGIN
 		DBMS_OUTPUT.PUT_LINE( amount );
         
     IF amount > 0 THEN 
-        amount := amount - 1;
+        amount := amount - ordered_amount;
         DBMS_OUTPUT.PUT_LINE( amount );
         UPDATE CARS
         SET STOCK = amount
