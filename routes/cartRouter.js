@@ -48,5 +48,26 @@ cartRouter
         }
     })
 
+cartRouter
+    .route('/order')
+    .post( authorization, async(req,res) => {
 
-module.exports = cartRouter;//
+        const { email, password } = req.user;
+        console.log( " /cart/order e ashlo \n");
+        console.log("user: ", email , "  pasword: ", password );
+        
+        const userDetails = await sendUserData(email,password);
+        console.log("userDetails: ", userDetails);
+        const userID = userDetails[0].ID;
+
+        const cartInfo = await getCartInfo(userID);
+        console.log("cartInfo: ", cartInfo);
+        
+        const { order_state, payment_method, payment_status, voucher_no, showroom_id } = req.body;
+        console.log("order_state: ", order_state, " payment_method: ", payment_method, " payment_status: ", payment_status, " voucher_no: ", voucher_no, " showroom_id: ", showroom_id);
+        
+        
+        
+    });
+
+module.exports = cartRouter;

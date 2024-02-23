@@ -63,11 +63,13 @@
         </div>
         <div class="order-button-container">
             <% if(cartProducts.length != 0) {%>
-                <p style="align-items: center;justify-content: center;padding: 0;display: flex;"><button type="button" class="btn btn-primary btn-lg place-order-btn">Place Order</button></p>
+                <p style="align-items: center;justify-content: center;padding: 0;display: flex;"><a href="/cart/orderInfo"><button type="button" class="btn btn-primary btn-lg place-order-btn">Place Order</button></a></p>
             <%}%>
         </div>
     </main>
         <%-include('layouts/footer.ejs',{})%>
+
+    
     <script>
 
     function incrementCount(index, increment,cart_id,stock,or_price) {
@@ -117,7 +119,22 @@
             if(res.message == "render") {
                 window.location.href = '/cart'
             }
-      }) 
+      })
+        // Fetch for /cart/order
+        <!-- fetch('/cart/order', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+                <!-- body: JSON.stringify( { showroom_id, vouhcer_no } ); -->
+            })
+            .then(response => response.json())
+                .then(data => {
+                // Handle the response data
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            }); -->
     }
 
     </script>

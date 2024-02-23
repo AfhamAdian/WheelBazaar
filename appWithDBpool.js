@@ -30,12 +30,6 @@ app.use('/', mainHomeRouter );
 const homeRouter = require('./routes/homeRouter.js');
 app.use('/test',homeRouter);
 
-const departmentRouter = require('./routes/deptRouter.js');
-app.use('/dept',departmentRouter);
-
-const employeeRouter = require('./routes/empRouter.js');
-app.use('/emp',employeeRouter);
-
 app.use('/login', require('./routes/logInRouter.js'));
 app.use('/signup', require('./routes/signUpRouter.js'));
 app.use('/logout', require('./routes/logOutRouter.js'));

@@ -17,4 +17,4 @@ logOutRouter
     });
 
 
-module.exports = logOutRouter;//
+module.exports = logOutRouter;

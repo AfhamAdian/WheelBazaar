@@ -59,4 +59,23 @@ async function decrement(cart_id,cnt) {
 }
 
 
+async function orderFromCart(  order_state, payment_method, payment_status, voucher_no, showroom_id  )
+{
+    try{
+        const sql =`
+        BEGIN 
+            orderFromCart(:order_state, :payment_method, :payment_status, :voucher_no, :showroom_id);
+        END;
+        `;
+        const binds = { model_color_id, user_id, status };
+
+        const result = await execute( sql, binds );
+
+        return result;
+    }catch(err){
+        console.log(err);
+    }
+}
+
+
 module.exports = { getCartInfo,increment,decrement };
