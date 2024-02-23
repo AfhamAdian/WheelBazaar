@@ -78,4 +78,4 @@ async function orderFromCart(  order_state, payment_method, payment_status, vouc
 }
 
 
-module.exports = { getCartInfo,increment,decrement };
+module.exports = { getCartInfo, increment, decrement, orderFromCart };

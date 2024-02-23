@@ -35,6 +35,9 @@ app.use('/signup', require('./routes/signUpRouter.js'));
 app.use('/logout', require('./routes/logOutRouter.js'));
 app.use('/cart', require('./routes/cartRouter.js'));
 
+app.use((req, res) => {
+    res.status(404).sendFile('./views/html.html', { root: __dirname });
+});
 
 /// 404 Page Ridercting 
 app.use((req, res) => {

@@ -66,8 +66,13 @@ cartRouter
         const { order_state, payment_method, payment_status, voucher_no, showroom_id } = req.body;
         console.log("order_state: ", order_state, " payment_method: ", payment_method, " payment_status: ", payment_status, " voucher_no: ", voucher_no, " showroom_id: ", showroom_id);
         
+        const result = await orderFromCart( order_state, payment_method, payment_status, voucher_no, showroom_id );
         
-        
+        res.status(200).json(
+            {
+                status : "success"
+            }
+        );
     });
 
 module.exports = cartRouter;

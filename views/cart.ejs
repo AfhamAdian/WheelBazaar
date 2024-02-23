@@ -63,7 +63,7 @@
         </div>
         <div class="order-button-container">
             <% if(cartProducts.length != 0) {%>
-                <p style="align-items: center;justify-content: center;padding: 0;display: flex;"><a href="/cart/orderInfo"><button type="button" class="btn btn-primary btn-lg place-order-btn">Place Order</button></a></p>
+                <p style="align-items: center;justify-content: center;padding: 0;display: flex;"><a href="/cart/orderpage"><button type="button" class="btn btn-primary btn-lg place-order-btn">Place Order</button></a></p>
             <%}%>
         </div>
     </main>
@@ -121,12 +121,12 @@
             }
       })
         // Fetch for /cart/order
-        <!-- fetch('/cart/order', {
+        fetch('/cart/order', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
             },
-                <!-- body: JSON.stringify( { showroom_id, vouhcer_no } ); -->
+                <!-- body: JSON.stringify(); -->
             })
             .then(response => response.json())
                 .then(data => {
@@ -134,7 +134,7 @@
             })
             .catch(error => {
                 console.error('Error:', error);
-            }); -->
+            });
     }
 
     </script>

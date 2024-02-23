@@ -3,25 +3,26 @@ CREATE OR REPLACE PROCEDURE orderFromCartOfUser (
     order_state IN VARCHAR2,
     payment_method IN VARCHAR2,
     payment_status IN VARCHAR2,
-    cart_id IN NUMBER,
     voucher_no IN NUMBER,
-    showroom_id IN NUMBER
+    showroom_id IN NUMBER,
+		paid_amount IN NUMBER
 ) IS 
     user_found BOOLEAN := FALSE;
 		res NUMBER;
+		i NUMBER;
 BEGIN
-    FOR R IN (SELECT * FROM CART)
-    LOOP
-        IF R.CUSTOMER_ID = user_id THEN 
-            user_found := TRUE;
--- 
-            IF LOWER(R.CONFIRM_STATUS) = 'not_confirmed' THEN 
-									res := orderFromCart(order_state, payment_method, payment_status, 																		cart_id, voucher_no, showroom_id);
-            END IF;
-        END IF;
-    END LOOP;
--- 
-    IF NOT user_found THEN
-        DBMS_OUTPUT.PUT_LINE('NO SUCH USER ID FOUND');
-    END IF;
+		i := 0;
+	FOR R IN ( SELECT * FROM CART WHERE CUSTOMER_ID = user_id )
+	LOOP
+		IF ( i = 0 AND LOWER( R.CONFIRM_STATUS ) = 'not_confirmed' ) 
+				THEN 
+			res := orderFromCart( order_state ,payment_method ,payment_status, R.CART_ID, voucher_no,showroom_id,paid_amount );
+			
+			i := i+1;
+			ELSIF LOWER( R.CONFIRM_STATUS) = 'not_confirmed' 
+				THEN
+			res := orderFromCart( order_state,payment_method, payment_status,R.CART_ID, voucher_no,showroom_id, 0 );		
+		END IF;
+		
+	END LOOP;
 END;
