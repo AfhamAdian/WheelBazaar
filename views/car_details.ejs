@@ -90,7 +90,8 @@
 
     <script>
         function addToCart2(model_color_id,user_id) {
-        fetch('/addtocart', {
+        if(user_id != 0) {
+          fetch('/addtocart', {
           method: 'POST',
           headers: {
                 'Content-Type': 'application/json'
@@ -101,7 +102,12 @@
           if(res.message == "ok") {
             alert( "Added to cart" );
           }
-        }) 
+        })
+        } 
+        if(user_id == 0) {
+          alert("Please log in to add to cart");
+          window.location.href = '/login'
+        }
       }
     </script>
 

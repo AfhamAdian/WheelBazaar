@@ -9,6 +9,21 @@
     <link href="https://getbootstrap.com/docs/5.3/assets/css/docs.css" rel="stylesheet">
     <script src="script/script.js"></script>
     <link rel="stylesheet" href="CSS/style.css">
+    <style>
+      #carouselExampleAutoplaying {
+        max-width: 800px;
+        max-height: 400px;
+        min-width: 800px;
+        min-height: 400px;
+        margin: auto;
+        overflow: hidden;
+      }
+      #carouselExampleAutoplaying img {
+        object-fit: cover;
+        width: 800px;
+        height: 400px;
+      }
+    </style>
 
   </head>
   <body>
@@ -16,6 +31,36 @@
       <main>
         <div class="container" id="searchRes">
 
+        </div>
+        <div class="container d-flex justify-content-center align-items-center">
+        <div id="carouselExampleAutoplaying" class="carousel slide carousel-fade" data-bs-ride="carousel">
+          <div class="carousel-inner" style="border-color: black;border-width: 50px;">
+            <div class="carousel-item active">
+              <img src="<%=trending[0].CAR_IMAGE_URL%>" class="d-block w-100 img-fluid" alt="..." >
+              <div class="carousel-caption d-none d-md-block" style="color: white; background: rgba(0, 0, 0, 0.5);">
+                <h5><%=trending[0].MODEL_NAME%></h5>
+                <p>Some representative placeholder content for the first slide.</p>
+              </div>
+            </div>
+            <% for(var i=1;i<trending.length;i++) { %>
+              <div class="carousel-item">
+                <img src="<%=trending[i].CAR_IMAGE_URL%>" class="d-block w-100 img-fluid" alt="..." >
+                <div class="carousel-caption d-none d-md-block" style="color: white; background: rgba(0, 0, 0, 0.5);">
+                  <h5><%=trending[i].MODEL_NAME%></h5>
+                  <p>Some representative placeholder content for the first slide.</p>
+                </div>
+              </div>
+            <%}%>
+          </div>
+          <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleAutoplaying" data-bs-slide="prev" >
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Previous</span>
+          </button>
+          <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleAutoplaying" data-bs-slide="next">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Next</span>
+          </button>
+        </div>
         </div>
       </main>
       <%-include('layouts/footer.ejs',{})%>
@@ -38,14 +83,6 @@
             fetchResultsType(this,'<%=user_info[0].ID%>');
           });
         }
-
-        // var searchButton = document.getElementById('searchButton');
-
-        // searchButton.addEventListener('click',function() {
-        //   const name = document.getElementById('searchBar').value;
-        //   console.log(name);
-        //   //fetchResultsByName(name);
-        // })
         
         </script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
