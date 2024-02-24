@@ -36,6 +36,17 @@ mainHomeRouter
 
         console.log("login status " + isLoggedIn);
 
+        const t_sql=`
+        SELECT * FROM CARS C
+        JOIN COMPANY CO ON C.COMPANY_ID = CO.ID
+        JOIN CARTYPE CA ON C.TYPE_ID = CA.TYPE_ID
+        JOIN USERS U ON C.COMPANY_ID = U.ID
+        ORDER BY DBMS_RANDOM.VALUE
+        FETCH FIRST 5 ROWS ONLY
+        `
+        const trending = await execute(t_sql,{});
+
+
         if( isLoggedIn == 'false' || isLoggedIn == undefined )
         {
             const sql="SELECT TYPE_NAME,CAR_TYPE_URL FROM CARTYPE";
@@ -44,7 +55,7 @@ mainHomeRouter
             //console.log(car_types);
             company_names=await execute(sql2,{});
             //console.log(company_names);
-            res.render('index',{car_types: car_types,company_names: company_names,authorized: "false",user:"user",user_info:[{ID: 0}]});
+            res.render('index',{car_types: car_types,company_names: company_names,authorized: "false",user:"user",user_info:[{ID: 0}],trending:trending});
         }
         else
         {
@@ -62,7 +73,7 @@ mainHomeRouter
             const password = user.password;
             const user_info = await sendUserData(email,password);
             //console.log(company_names);
-            res.render('index',{car_types: car_types,company_names: company_names,authorized: "true" , user: user,user_info:user_info});
+            res.render('index2',{car_types: car_types,company_names: company_names,authorized: "true" , user: user,user_info:user_info,trending:trending});
         }
 
     })
@@ -147,7 +158,7 @@ mainHomeRouter
         })
     mainHomeRouter
         .route('/cardetails')
-        .get(authorization,async(req,res)=>{
+        .get(async(req,res)=>{
             var car_id = req.query.car_id;
             var user_id = req.query.user_id;
             const sql = `
