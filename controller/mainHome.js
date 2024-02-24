@@ -110,5 +110,48 @@ function test ()
     console.log("test ashe");
 }
 
+async function sendLocationDataByLocationId(id) {
+    try {
+        const sql = `
+        SELECT * 
+        FROM LOCATIONS
+        WHERE LOCATION_ID = :id
+        `
+        const binds = {id};
+        const result = await execute(sql,binds);
+        console.log(result)
+        return result;
+    }
+    catch(error) {
+        console.log(error)
+    }
+}
 
-module.exports = { searchByCompany, searchByType , searchByName, test, addToCart };
+async function updateCustomerData(email,name,phone,division,city,id) {
+    const sql = `
+    SELECT check_update_criteria(:email,:phone,:id) CSC
+    FROM DUAL
+    `
+    const binds = {email,phone,id}
+    var res1 = await execute(sql,binds);
+    console.log(res1)
+    if(res1[0].CSC == 1) {
+        return 1;
+    }
+    if(res1[0].CSC == 2) {
+        return 2;
+    }
+    if(res1[0].CSC == 0) {
+        const sql2 = `
+        BEGIN
+            updateCustomer(:name,:email,:phone,:city,:id);
+        END;
+        `
+        const binds2 = {name,email,phone,city,id}
+        var res2 = await execute(sql2,binds2);
+        return 0;
+    }
+}
+
+
+module.exports = { searchByCompany, searchByType , searchByName, test, addToCart , sendLocationDataByLocationId ,updateCustomerData };

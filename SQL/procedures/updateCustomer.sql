@@ -1,0 +1,21 @@
+CREATE OR REPLACE PROCEDURE updateCustomer(
+in_name IN VARCHAR2,
+in_email IN VARCHAR2,
+in_phone IN VARCHAR2,
+in_city IN VARCHAR2,
+in_id IN NUMBER
+) IS 
+l_id NUMBER;
+BEGIN
+	SELECT LOCATION_ID INTO l_id 
+	FROM LOCATIONS 
+	WHERE CITY = in_city;
+	
+	UPDATE USERS
+	SET NAME = in_name , EMAIL = in_email , PHONE_NUMBER = in_phone
+	WHERE ID = in_id;
+	
+	UPDATE CUSTOMER
+	SET LOCATION_ID = l_id
+	WHERE ID = in_id;
+END;
