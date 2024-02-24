@@ -1,0 +1,174 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Update Information</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@v1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+    <link href="https://getbootstrap.com/docs/5.3/assets/css/docs.css" rel="stylesheet">
+    <script src="script/script.js"></script>
+    <link rel="stylesheet" href="CSS/style.css">
+    <style>
+        .custom-btn {
+            width: 150px;
+            margin-top: 20px;
+            background-color: green;
+            color: white;
+            border-color: green;
+        }
+        .custom-btn:hover {
+        background-color: green;
+        border-color: green; 
+        color: white;
+    }
+    </style>
+</head>
+<body>
+    <script>
+        var divisions = ["Barishal", "Chattogram", "Dhaka", "Khulna", "Mymensingh", "Rajshahi", "Rangpur", "Sylhet"];
+        var citiesB = ["Barguna", "Barishal", "Bhola", "Jhalokathi", "Patuakhali", "Pirojpur"];
+        var citiesC = ["Bandarban","Brahmanbaria","Chandpur","Chattogram","Comilla","Cox’s Bazar","Feni","Khagrachari","Lakshmipur","Noakhali","Rangamati"];
+        var citiesD = ["Dhaka","Faridpur","Gazipur","Gopalganj","Kishoreganj","Madaripur","Manikganj","Munshiganj","Narayanganj","Narshingdi","Rajbari","Shariatpur","Tangail"];
+        var citiesK = ["Bagherhat","Chuadanga","Jessore","Jinaidaha","Khulna","Kustia","Magura","Meherpur","Narail","Satkhira"];
+        var citiesM = ["Jamalpur","Mymensingh","Netrakona","Sherpur"];
+        var citiesR = ["Bogura","Chapai Nawabganj","Joypurhat","Naogaon","Natore","Pabna","Rajshahi","Sirajganj"];
+        var citiesRR = ["Dinajpur","Gaibandha","Kurigram","Lalmonirhat","Nilphamari","Panchagarh","Rangpur","Thakurgaon"];
+        var citiesS = ["Hobiganj","Moulvibazar","Sunamganj","Sylhet"];
+    </script>
+    <%-include('layouts/navbar2.ejs',{authorized: authorized,user_info:user_info}) %>
+    <main>
+        <div class="container mt-4">
+            <div class="text-center bg-dark text-white p-3">
+                <h1>Update Information</h1>
+            </div>
+
+            <form class="mt-4" onsubmit="update()">
+                <div class="form-group">
+                    <label for="name">Name:</label>
+                    <input type="text" class="form-control" id="name" name="name" required>
+                </div>
+                <div class="form-group">
+                    <label for="email">Email:</label>
+                    <input type="email" class="form-control" id="email" name="email" required>
+                </div>
+                <div class="form-group">
+                    <label for="phone">Phone:</label>
+                    <input type="tel" class="form-control" id="phone" name="phone" size="11" maxlength="11" minlength="11" required>
+                </div>
+                <div class="form-group">
+                    <label for="division">Division:</label>
+                    <select class="form-control" id="division" name="division" required onChange="updateCities()">
+                        <script>
+                                var selectDivision = document.getElementById("division");
+                                var placeholderOption = document.createElement("option");
+                                placeholderOption.value = 'Select Division';
+                                placeholderOption.text = 'Select Division';
+                                placeholderOption.disabled = true;
+                                placeholderOption.selected = true;
+                                selectDivision.appendChild(placeholderOption);
+                                divisions.forEach(function(division) {
+                                    var option = document.createElement("option");
+                                    option.value = division;
+                                    option.text = division;
+                                    if (division === '<%=location[0].DIVISION%>') {
+                                        option.selected = true;
+                                    }
+                                    selectDivision.appendChild(option);
+                                });
+                        </script>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="city">City:</label>
+                    <select class="form-control" id="city" name="city" required>
+                        <script>
+                            function updateCities() {
+                                var selectCity = document.getElementById("city");
+                                var cities;
+                                var d = document.getElementById("division").value;
+                                if(d == "Barishal") cities = citiesB;
+                                if(d == "Rangpur") cities = citiesRR;
+                                if(d == "Chattogram") cities = citiesC;
+                                if(d == "Dhaka") cities = citiesD;
+                                if(d == "Sylhet") cities = citiesS;
+                                if(d == "Khulna") cities = citiesK;
+                                if(d == "Mymensingh") cities = citiesM;
+                                if(d == "Rajshahi") cities = citiesR;
+                                var selectedCity = selectCity.value;
+                                selectCity.innerHTML = "";
+                                var placeholderOption = document.createElement("option");
+                                placeholderOption.value = 'Select City';
+                                placeholderOption.text = 'Select City';
+                                placeholderOption.disabled = true;
+                                placeholderOption.selected = true;
+                                selectCity.appendChild(placeholderOption);
+                                cities.forEach(function(city) {
+                                    var option = document.createElement("option");
+                                    option.value = city;
+                                    option.text = city;
+                                    if (city === '<%=location[0].CITY%>') {
+                                        option.selected = true;
+                                    }
+                                    selectCity.appendChild(option);
+                                });
+                            }
+                            updateCities();
+                        </script>
+                    </select>
+                </div>
+                <div>
+                    <button class="btn custom-btn" type="submit">Submit</button>
+                </div>
+            </form>
+        </div>
+    </main>
+    <%-include('layouts/footer.ejs',{})%>
+    <!-- Include Bootstrap JS and Popper.js -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script>
+            document.getElementById('name').value = '<%=user_info[0].NAME%>'
+            document.getElementById('email').value = '<%=user_info[0].EMAIL%>'
+            var dbPhoneNumber = '<%=user_info[0].PHONE_NUMBER%>'
+            var displayPhoneNumber = (dbPhoneNumber.charAt(0) !== '0') ? '0' + dbPhoneNumber : dbPhoneNumber;
+            document.getElementById('phone').value = displayPhoneNumber
+            function update() {
+                var id = '<%=user_info[0].ID%>'
+                var email = document.getElementById('email').value;
+                var name = document.getElementById('name').value;
+                var phone = document.getElementById('phone').value;
+                var division = document.getElementById('division').value;
+                console.log(division)
+                var city = document.getElementById('city').value;
+                if(division == "Select Division") {
+                    alert("Select Division");
+                }
+                else if(city == "Select City") {
+                    alert("Select City");
+                }
+                else {
+                    fetch('/updateInfo',{
+                        method: 'POST',
+                        headers: {
+                                'Content-Type': 'application/json'
+                            },
+                        body: JSON.stringify({email,name,phone,division,city,id})
+                    }).then(res=>res.json())
+                    .then(res=>{
+                        if(res.message == "email") {
+                            alert("Email is associated with another account");
+                        }
+                        if(res.message == "phone") {
+                            alert("Phone number is associated with another account");
+                        }
+                        if(res.message == "ok") {
+                            window.location.href = '/myinfo'
+                        }
+                    })
+                }
+            }
+    </script>
+</body>
+</html>

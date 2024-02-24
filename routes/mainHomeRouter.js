@@ -2,14 +2,14 @@ const express = require('express');
 const { execute } = require('../DB/dbConnect.js');
 const path = require('path');
 const { result } = require('lodash');
-const { searchByCompany, searchByType, searchByName, test } = require('../controller/mainHome.js');
+const { searchByCompany, searchByType, searchByName, test , sendLocationDataByLocationId , updateCustomerData } = require('../controller/mainHome.js');
 const { addToCart } = require('../controller/mainHome.js');
 const { type } = require('os');
 const authorization = require('../middlewares/authorization.js');
 const decodeTokenFromCookies = require('../utils/decodeToken.js');
 
 
-const {sendUserData, sendUserDataByID } = require('../controller/logIn.js');
+const {sendUserData, sendUserDataByID,sendCustomerData } = require('../controller/logIn.js');
 const { Console } = require('console');
 // Assuming __dirname is the 'route' directory
 const routeDirectory = __dirname;
@@ -147,7 +147,7 @@ mainHomeRouter
         })
     mainHomeRouter
         .route('/cardetails')
-        .get(async(req,res)=>{
+        .get(authorization,async(req,res)=>{
             var car_id = req.query.car_id;
             var user_id = req.query.user_id;
             const sql = `
@@ -167,6 +167,58 @@ mainHomeRouter
                 authorized = "true";
                 const user_info = await sendUserDataByID(user_id);
                 res.render('car_details',{authorized:authorized,user_info:user_info,product:product})
+            }
+        })
+    mainHomeRouter
+        .route('/myinfo')
+        .get(authorization,async(req,res)=> {
+            const {email,password} = req.user;
+            const userDetails = await sendCustomerData(email,password);
+            console.log(userDetails);
+            if(userDetails[0].LOCATION_ID == 0) {
+                res.render('customerInfo',{user_info:userDetails,authorized:"true",location:[{LOCATION_ID:0,COUNTRY:"",DIVISION:"",CITY:""}]});
+            }
+            else {
+                const location =await sendLocationDataByLocationId(userDetails[0].LOCATION_ID);
+                res.render('customerInfo',{user_info:userDetails,authorized:"true",location:location});
+            }
+            
+        })
+    mainHomeRouter
+        .route('/editInfo') 
+        .get(authorization,async(req,res)=>{
+            const {email,password} = req.user;
+            const userDetails = await sendCustomerData(email,password);
+            console.log(userDetails);
+            if(userDetails[0].LOCATION_ID == 0) {
+                res.render('editCustomerInfo',{user_info:userDetails,authorized:"true",location:[{ID:0,DIVISION:"",CITY:""}]});
+            }
+            else {
+                const location =await sendLocationDataByLocationId(userDetails[0].LOCATION_ID);
+                res.render('editCustomerInfo',{user_info:userDetails,authorized:"true",location:location});
+            }
+        })
+    mainHomeRouter
+        .route('/updateInfo')
+        .post(async(req,res)=>{
+            const {
+                email,
+                name,
+                phone,
+                division,
+                city,
+                id
+            } = req.body
+            console.log(id)
+            var result =await updateCustomerData(email,name,phone,division,city,id);
+            if(result == 1) {
+                res.json({message: "email"})
+            }
+            if(result == 2) {
+                res.json({message: "phone"})
+            }
+            if(result == 0) {
+                res.json({message: "ok"})
             }
         })
 
