@@ -59,15 +59,15 @@ async function decrement(cart_id,cnt) {
 }
 
 
-async function orderFromCart(  order_state, payment_method, payment_status, voucher_no, showroom_id  )
+async function orderFromCart(  order_state, payment_method, payment_status, voucher_no, showroom_id, paid_amount  )
 {
     try{
         const sql =`
         BEGIN 
-            orderFromCart(:order_state, :payment_method, :payment_status, :voucher_no, :showroom_id);
+            orderFromCartOfUser(:order_state, :payment_method, :payment_status, :voucher_no, :showroom_id, :paid_amount);
         END;
         `;
-        const binds = { model_color_id, user_id, status };
+        const binds = { order_state, payment_method, payment_status, voucher_no, showroom_id, paid_amount };
 
         const result = await execute( sql, binds );
 

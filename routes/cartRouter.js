@@ -63,10 +63,10 @@ cartRouter
         const cartInfo = await getCartInfo(userID);
         console.log("cartInfo: ", cartInfo);
         
-        const { order_state, payment_method, payment_status, voucher_no, showroom_id } = req.body;
-        console.log("order_state: ", order_state, " payment_method: ", payment_method, " payment_status: ", payment_status, " voucher_no: ", voucher_no, " showroom_id: ", showroom_id);
+        const { order_state, payment_method, payment_status, voucher_no, showroom_id, paid_amount } = req.body;
+        console.log("order_state: ", order_state, " payment_method: ", payment_method, " payment_status: ", payment_status, " voucher_no: ", voucher_no, " showroom_id: ", showroom_id, " paid_amount: ", paid_amount);
         
-        const result = await orderFromCart( order_state, payment_method, payment_status, voucher_no, showroom_id );
+        const result = await orderFromCart( order_state, payment_method, payment_status, voucher_no, showroom_id, paid_amount );
         
         res.status(200).json(
             {

@@ -21,7 +21,12 @@ BEGIN
 		WHERE CR1.CART_ID = cart_id1;
 		
 		DBMS_OUTPUT.PUT_LINE( price );
-		price := price + paid_amount;
+        
+        IF paid_amount > price THEN 
+            price := 0;
+        ELSE 
+            price := price - paid_amount;
+        END IF;
 
     INSERT INTO orderList( ORDER_ID, ORDER_DATE, ORDER_STATE, PAYMENT_METHOD, PAYMENT_STATUS, CART_ID, VOUCHER_NO, SHOWROOM_ID, DUE )
     VALUES ( max_order_id, SYSDATE, order_state, payment_method, payment_status, cart_id1, voucher_no, showroom_id, price );

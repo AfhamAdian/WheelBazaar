@@ -5,7 +5,7 @@ CREATE OR REPLACE PROCEDURE orderFromCartOfUser (
     payment_status IN VARCHAR2,
     voucher_no IN NUMBER,
     showroom_id IN NUMBER,
-		paid_amount IN NUMBER
+	paid_amount IN NUMBER
 ) IS 
     user_found BOOLEAN := FALSE;
 		res NUMBER;
