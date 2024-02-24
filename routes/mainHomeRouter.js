@@ -73,13 +73,6 @@ mainHomeRouter
 mainHomeRouter
     .route('/showBrandWise')
     .get( async ( req, res ) => {
-        // console.log("asche");
-        // const companyName = req.body.buttonText;
-
-        // console.log(companyName);
-        // test();
-        // const result = await searchByCompany( companyName );
-        // res.json(result);
     })
     .post( async ( req, res ) => {
         console.log("asche");
@@ -94,21 +87,6 @@ mainHomeRouter
 mainHomeRouter
     .route('/showTypeWise')
     .get( async ( req, res ) => {
-        // console.log("asche");
-        // const {
-        //     typeName
-        // } = req.params;
-
-        // console.log(typeName);
-
-        // const result = await searchByType( typeName );
-        // console.log( result );
-
-        // const sql="SELECT TYPE_NAME,CAR_TYPE_URL FROM CARTYPE";
-        // const sql2="SELECT NAME FROM USERS WHERE USER_TYPE = 'CO'";
-        // const car_types=await execute(sql,{});
-        // const company_names=await execute(sql2,{});
-        // res.render('index',{car_types: car_types,company_names: company_names,result: result});
     })
     .post( async ( req, res ) => {
         //console.log("asche");
