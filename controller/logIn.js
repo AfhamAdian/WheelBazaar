@@ -61,13 +61,13 @@ async function authUser ( email, password )
     }
 }
  
-async  function sendUserData ( email, password )
+async function sendUserData ( email, password )
 {
     try{
         const sql =`
             SELECT *
-            FROM USERS
-            WHERE EMAIL = :email AND (PASSWORD = :password)
+            FROM USERS U JOIN CUSTOMER C ON (U.ID = C.ID)
+            WHERE U.EMAIL = :email AND (U.PASSWORD = :password)
         `
         const binds = { email, password };
 

@@ -55,7 +55,7 @@ mainHomeRouter
             //console.log(car_types);
             company_names=await execute(sql2,{});
             //console.log(company_names);
-            res.render('index',{car_types: car_types,company_names: company_names,authorized: "false",user:"user",user_info:[{ID: 0}],trending:trending});
+            res.render('index2',{car_types: car_types,company_names: company_names,authorized: "false",user:"user",user_info:[{ID: 0}],trending:trending});
         }
         else
         {
