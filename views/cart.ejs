@@ -29,9 +29,11 @@
 <body>
     <%-include('layouts/navbar2.ejs',{authorized: authorized,user_info:user_info}) %>
     <main>
-      <div class="text-center bg-dark text-white p-3">
-        <h1>My Wishlist</h1>
-    </div>
+      <% if(cartProducts.length != 0) {%>
+        <div class="text-center bg-dark text-white p-3">
+          <h1>My Wishlist</h1>
+      </div>
+      <%}%>
         <div class="container" id="searchRes">
             <% if(cartProducts.length != 0) {%>
                 <% for (let i = 0; i < cartProducts.length; i++) { %>
@@ -59,7 +61,7 @@
                   <% } %>
             <%}%>
             <% if(cartProducts.length == 0) { %>
-                <h1 style="color: red;">Your wishlist is empty!</h1>
+                <h1 style="color: red; margin-top: 25vh;" >Your wishlist is empty !</h1>
             <%}%>
         </div>
         <div class="order-button-container">

@@ -3,7 +3,7 @@ const path = require('path');
 
 const authorization = require('../middlewares/authorization.js');
 const { sendUserData } = require('../controller/logIn.js');
-const { getCartInfo,increment, decrement , getShowRooms } = require('../controller/CART.JS');
+const { getCartInfo,increment, decrement , getShowRooms ,orderFromCart} = require('../controller/CART.JS');
 
 const cartRouter = express.Router();
 
@@ -56,7 +56,7 @@ cartRouter
         const { order_state, payment_method, payment_status, voucher_no, showroom_id, paid_amount } = req.body;
         console.log("order_state: ", order_state, " payment_method: ", payment_method, " payment_status: ", payment_status, " voucher_no: ", voucher_no, " showroom_id: ", showroom_id, " paid_amount: ", paid_amount);
         
-        //const result = await orderFromCart( order_state, payment_method, payment_status, voucher_no, showroom_id, paid_amount );
+        const result = await orderFromCart( userID,order_state, payment_method, payment_status, voucher_no, showroom_id, paid_amount );
         
         res.status(200).json(
             {
