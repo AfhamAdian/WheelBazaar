@@ -77,5 +77,19 @@ async function orderFromCart(  order_state, payment_method, payment_status, vouc
     }
 }
 
+async function getShowRooms(l_id) {
+    try {
+        const sql = `
+        SELECT * FROM SHOWROOM
+        WHERE LOCATION_ID = :l_id
+    `
+    const binds = {l_id:l_id};
+    const result = await execute(sql,binds);
+    return result;
+    } catch(error) {
+        console.log(error);
+    }
+}
 
-module.exports = { getCartInfo, increment, decrement, orderFromCart };
+
+module.exports = { getCartInfo, increment, decrement, orderFromCart , getShowRooms };

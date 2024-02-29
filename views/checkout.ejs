@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Checkout</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cart</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@v1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+    <link href="https://getbootstrap.com/docs/5.3/assets/css/docs.css" rel="stylesheet">
+    <link rel="stylesheet" href="/CSS/style.css">
+    <script src="/script/script.js"></script>
+    <style>
+        body {
+            background-color: #f8f9fa;
+        }
+        .checkout-container {
+            max-width: 100%;
+            margin: auto;
+            padding: 20px;
+            background-color: #ffffff;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            margin-top: 50px;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        .form-group label {
+            font-weight: 500;
+        }
+        .selected-cars {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+        .car {
+            margin-top: 5px;
+            box-sizing: border-box;
+            border: 3px solid #ddd;
+            border-radius: 10px;
+            padding: 15px;
+            background-color: #fff;
+            transition: transform 0.3s ease-in-out;
+        }
+        .car:hover {
+            transform: scale(1.05);
+        }
+        .car h5 {
+            margin-top: 0;
+            color: #007bff;
+        }
+        .car p {
+            margin-bottom: 8px;
+            color: #555;
+        }
+        .checkout-form {
+            margin-top: 20px;
+        }
+        .checkout-form label {
+            font-weight: bold;
+            color: #555;
+        }
+        .checkout-form input,
+        .checkout-form select {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            box-sizing: border-box;
+        }
+        .checkout-form button {
+            padding: 12px;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease-in-out;
+        }
+        .checkout-form button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <%-include('layouts/navbar2.ejs',{authorized: authorized,user_info:user_info}) %>
+    <main>
+        <div class="text-center bg-dark text-white p-3">
+            <h1>Order Confirmation</h1>
+        </div>
+        <div class="container mt-4 checkout-container">
+            <div class="form-group selected-cars" id="carList">
+                <label for="carList">Selected Cars:</label>
+                <p></p>
+                <% cartProducts.forEach(function(car) { %>
+                    <div class="car">
+                        <h5><%= car.MODEL_NAME %></h5>
+                        <p>Company: <%= car.NAME %></p>
+                        <p>Price: BDT <%= car.PRICE %></p>
+                        <p>Count: <%= car.CAR_COUNT %></p>
+                    </div>
+                <% }); %>
+            </div>
+        
+            <form class="mt-4">
+        
+                <!-- Total Amount -->
+                <div class="form-group">
+                    <label for="totalAmount" >Total Amount: BDT <%=total_price%></label>
+                </div>
+        
+                <!-- Showroom Selection -->
+                <div class="form-group">
+                    <label for="showroom" >Select Showroom:</label>
+                    <select class="form-control" id="showroom" name="showroom" required>
+                        <option value="" disabled selected>Select Showroom</option>
+                        <% for (var i = 0; i < showroom.length; i++) { %>
+                            <option value="<%= showroom[i].SHOWROOM_ID %>"><%= showroom[i].SHOWROOM_NAME %></option>
+                        <% } %>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="paymentMethod">Select Payment Method:</label>
+                    <select class="form-control" id="paymentMethod" name="paymentMethod" required>
+                        <option value="" disabled selected>Select Payment Method</option>
+                        <option value="COD">Cash on Delivery</option>
+                        <option value="OP">Online Payment</option>
+                    </select>
+                </div>
+        
+                <div id="onlinePaymentOptions" style="display: none;">
+                    <div class="form-group">
+                        <label for="cardNumber">Card Number:</label>
+                        <input type="text" class="form-control" id="cardNumber" name="cardNumber" placeholder="Enter your card number" size="16" maxlength="16" minlength="16" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="paymentType">Payment Type:</label>
+                        <select class="form-control" id="paymentType" name="paymentType" required>
+                            <option value="" disabled selected>Select Payment Type</option>
+                            <option value="fullPayment">Full Payment</option>
+                            <option value="partialPayment">Partial Payment</option>
+                        </select>
+                    </div>
+                    <!-- Additional field for partial payment amount (visible only if partial payment selected) -->
+                    <div id="partialPaymentAmount" style="display: none;">
+                        <label for="partialAmount">Partial Payment Amount:</label>
+                        <input type="number" class="form-control" id="partialAmount" name="partialAmount" placeholder="Enter partial payment amount" required>
+                    </div>
+                </div>
+        
+                <button type="submit" class="btn btn-primary btn-block" style="background-color: green;" onclick="order()">Place order</button>
+            </form>
+        </div>
+    </main>
+    <%-include('layouts/footer.ejs',{})%>
+    <script>
+        // Script to toggle display of online payment options based on the selected payment method
+        document.getElementById("paymentMethod").addEventListener("change", function() {
+            var onlinePaymentOptions = document.getElementById("onlinePaymentOptions");
+            var partialPaymentAmount = document.getElementById("partialPaymentAmount");
+    
+            if (this.value === "OP") {
+                onlinePaymentOptions.style.display = "block";
+            } else {
+                onlinePaymentOptions.style.display = "none";
+                partialPaymentAmount.style.display = "none";
+            }
+        });
+    
+        // Script to toggle display of partial payment amount field based on the selected payment type
+        document.getElementById("paymentType").addEventListener("change", function() {
+            var partialPaymentAmount = document.getElementById("partialPaymentAmount");
+    
+            if (this.value === "partialPayment") {
+                partialPaymentAmount.style.display = "block";
+            } else {
+                partialPaymentAmount.style.display = "none";
+            }
+        });
+    </script>
+    <script>
+        function order() {
+            const order_state = 'PROCESSING';
+            const voucher_no = '';
+            const showroom_id = document.getElementById('showroom').value;
+            const payment_method = document.getElementById('paymentMethod').value;
+            let payment_status,paid_amount;
+            if(payment_method == 'COD') {
+                paid_amount = 0;
+                payment_status = 'NOT_PAID'
+            }
+            if(payment_method == 'OP') {
+                var payment_type = document.getElementById('paymentType').value;
+                if(payment_type == 'fullPayment') {
+                    paid_amount = '<%=total_price%>';
+                    payment_status = 'PAID'
+                }
+                if(payment_type == 'partialPayment') {
+                    paid_amount = document.getElementById('partialAmount').value;
+                    payment_status = 'NOT_PAID'
+                }
+            }
+            fetch('/cart/order',{
+                method: 'POST',
+                 headers: {
+                'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({order_state,payment_method,payment_status,voucher_no,showroom_id,paid_amount})
+            }).then(res=>res.json())
+            .then(res=>{
+                if(res.status == 'success') {
+                    alert('Suffessfully placed your order');
+                    window.location.href = '/' ; // later will use myorder page instead homepage
+                }
+            })
+        }
+    </script>
+</body>
+</html>
