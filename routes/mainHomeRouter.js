@@ -150,7 +150,7 @@ mainHomeRouter
             var authorized;
             if(user_id == 0) {
                 authorized = "false";
-                res.render('car_details',{authorized:authorized,user_info:[{ID: 0}],product:product})
+                res.render('car_details',{authorized:authorized,user_info:[{ID: 0,NAME:"DDD"}],product:product})
             }
             else {
                 authorized = "true";

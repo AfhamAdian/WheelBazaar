@@ -41,21 +41,38 @@
         for(let i=0;i<data.length;i++) {
         document.getElementById('searchRes').innerHTML+=`
         <div class="card mb-3">
-        <div class="row no-gutters">
-          <div class="col-md-4">
+    <div class="row no-gutters">
+        <div class="col-md-4">
             <a href="/cardetails?car_id=${data[i].MODEL_COLOR_ID}&user_id=${id}">
-              <img src="${data[i].CAR_IMAGE_URL}" class="card-img" style="height: 100%;"  alt="..." >
+                <img src="${data[i].CAR_IMAGE_URL}" class="card-img" style="height: 100%;" alt="...">
             </a>
+        </div>
+          <div class="col-md-4">
+              <div class="card-body">
+                  <a class="card-title" href="/cardetails?car_id=${data[i].MODEL_COLOR_ID}&user_id=${id}">${data[i].MODEL_NAME}</a>
+                  <br>
+                  <a class="card-text" style="font-weight: 100; font-size:20px;" href="${data[i].COMPANY_URL}">${data[i].NAME}</a>
+                  <br>
+                  <a class="card-text" style="font-weight: 100; font-size:20px;" href="${data[i].CAR_TYPE_URL}">${data[i].TYPE_NAME}</a>
+              </div>
           </div>
-          <div class="col-md-8">
+          <div class="col-md-4">
             <div class="card-body">
-              <a class="card-title" href="/cardetails">${data[i].MODEL_NAME}</a>
-              <p class="card-text">Price : ${data[i].PRICE}</p>
-              <button class="btn btn-primary" name="add_to_cart_button" data-info="${data[i].MODEL_COLOR_ID}">Add to wishlist</button>
+              <p class="card-text">Price: ${data[i].PRICE}</p>
+              <p class="card-text">
+              Stock: <span style="color: ${data[i].STOCK !== 0 ? '#00cc00' : '#ff0000'}; font-weight: bold; font-style: italic;">
+                  ${data[i].STOCK !== 0 ? '<strong><em>In stock</em></strong>' : '<strong><em>Out of stock</em></strong>'}
+              </span>
+              </p>
+              <p class="card-text">Warranty: ${data[i].WARRANTY} years</p>
+            </div>
+            <div class="">
+              <button class="add_to_cart_button_index" name="add_to_cart_button" data-info="${data[i].MODEL_COLOR_ID}" ${data[i].STOCK === 0 ? 'disabled="disabled" style="cursor: not-allowed;"' : ''}>Add to wishlist</button>
             </div>
           </div>
-        </div>
-        </div>`
+    </div>
+</div>
+    `
         }
         var add_to_cart_buttons = document.getElementsByName('add_to_cart_button');
 
