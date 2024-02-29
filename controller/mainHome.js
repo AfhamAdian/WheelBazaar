@@ -9,22 +9,11 @@ async function searchByCompany( companyName )
         
         console.log( 'company name in api  ' + companyName );
         const sql = `
-            SELECT 
-            C.MODEL_COLOR_ID,
-            C.MODEL_NAME,
-            C.SEAT_CAP,
-            C.ENGINE_CAP,
-            C.COLOR,
-            C.PRICE,
-            C.LAUNCH_DATE,
-            C.STOCK,
-            C.WARRANTY,
-            C.CAR_IMAGE_URL,
-            C.TYPE_ID,
-            C.VOUCHER_NO
+            SELECT *
             FROM CARS C 
             JOIN COMPANY CP ON ( C.COMPANY_ID = CP.ID )
             JOIN USERS U ON ( U.ID = CP.ID )
+            JOIN CARTYPE CT ON (C.TYPE_ID = CT.TYPE_ID)
             WHERE LOWER(REPLACE(U.NAME,' ','')) = LOWER( REPLACE(:companyName, ' ','' ) )
         `;
 
@@ -44,12 +33,14 @@ async function searchByType ( typeName )
         //console.log( 'company name in api  ' + companyName );
         const sql = `
         SELECT *
-        FROM CARS 
-        WHERE TYPE_ID = 
+        FROM CARS C
+        JOIN USERS U ON (U.ID = C.COMPANY_ID)
+        JOIN CARTYPE CT ON (C.TYPE_ID = CT.TYPE_ID)
+        WHERE C.TYPE_ID = 
         (
-            SELECT TYPE_ID
-            FROM CARTYPE
-            WHERE LOWER(REPLACE(TYPE_NAME,' ','')) = LOWER(REPLACE( :typeName ,' ','' ))
+            SELECT CCCC.TYPE_ID
+            FROM CARTYPE CCCC
+            WHERE LOWER(REPLACE(CCCC.TYPE_NAME,' ','')) = LOWER(REPLACE( :typeName ,' ','' ))
         )
         `;
 
@@ -70,7 +61,9 @@ async function searchByName(carName)
 
         const sql = `
         SELECT *
-        FROM CARS
+        FROM CARS C
+        JOIN USERS U ON (U.ID = C.COMPANY_ID)
+        JOIN CARTYPE CT ON (C.TYPE_ID = CT.TYPE_ID)
         WHERE LOWER(REPLACE(MODEL_NAME, ' ', '' )) LIKE LOWER(REPLACE( ${editedCarName} , ' ', '' ))
         `;
         

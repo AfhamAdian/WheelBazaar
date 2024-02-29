@@ -124,10 +124,10 @@
             <p class="car-price">BDT <%=product[0].PRICE%></p>
             <div class="car-details">
                 <p><strong>Color:</strong> <%=product[0].COLOR%></p>
-                <%if(product[0].STOCK != 0 ) {%>
+                <%if(product[0].STOCK > 0 ) {%>
                   <p><strong>Stock:</strong> <span style="color: #218838;font-weight: bold;">In Stock</span></p>
                 <%}%>
-                <%if(product[0].STOCK = 0 ) {%>
+                <%if(product[0].STOCK == 0 ) {%>
                   <p><strong>Stock:</strong> <span style="color: red;font-weight: bold;">Out Of Stock</span></p>
                 <%}%>
                 <p><strong>Seat Capacity:</strong> <%=product[0].SEAT_CAP%> seats</p>
@@ -135,7 +135,12 @@
                 <p><strong>Warranty:</strong> <%=product[0].WARRANTY%> years</p>
                 <p><strong>Launch Date:</strong> <%=product[0].LAUNCH_DATE%></p>
             </div>
-            <button class="add-to-cart-btn" onclick="addToCart2('<%=product[0].MODEL_COLOR_ID%>','<%=user_info[0].ID%>')">Add To Wishlist</button>
+            <%if(product[0].STOCK > 0 ) {%>
+              <button class="add-to-cart-btn" onclick="addToCart2('<%=product[0].MODEL_COLOR_ID%>','<%=user_info[0].ID%>')">Add To Wishlist</button>
+            <%}%>
+            <%if(product[0].STOCK == 0 ) {%>
+              <button class="add-to-cart-btn" disabled style="cursor: not-allowed;">Add To Wishlist</button>
+            <%}%>
         </div>
     </main>
   <%-include('layouts/footer.ejs',{})%>
