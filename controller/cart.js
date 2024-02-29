@@ -12,7 +12,7 @@ async function getCartInfo( user_id )
         JOIN CARS cars ON ( cart.MODEL_COLOR_ID = cars.MODEL_COLOR_ID )
         JOIN USERS com ON (cars.COMPANY_ID = com.ID)
         JOIN CARTYPE ct ON (cars.TYPE_ID = ct.TYPE_ID)
-		WHERE cart.CUSTOMER_ID = :user_id
+		WHERE cart.CUSTOMER_ID = :user_id AND cart.CONFIRM_STATUS = 'NOT_CONFIRMED'
         `;
         const binds = { user_id };
 
@@ -59,15 +59,15 @@ async function decrement(cart_id,cnt) {
 }
 
 
-async function orderFromCart(  order_state, payment_method, payment_status, voucher_no, showroom_id, paid_amount  )
+async function orderFromCart( user_id,  order_state, payment_method, payment_status, voucher_no, showroom_id, paid_amount  )
 {
     try{
         const sql =`
         BEGIN 
-            orderFromCartOfUser(:order_state, :payment_method, :payment_status, :voucher_no, :showroom_id, :paid_amount);
+            orderFromCartOfUser(:user_id,:order_state, :payment_method, :payment_status, :voucher_no, :showroom_id, :paid_amount);
         END;
         `;
-        const binds = { order_state, payment_method, payment_status, voucher_no, showroom_id, paid_amount };
+        const binds = { user_id,order_state, payment_method, payment_status, voucher_no, showroom_id, paid_amount };
 
         const result = await execute( sql, binds );
 

@@ -107,8 +107,6 @@
             </div>
         
             <form class="mt-4">
-        
-                <!-- Total Amount -->
                 <div class="form-group">
                     <label for="totalAmount" >Total Amount: BDT <%=total_price%></label>
                 </div>
@@ -185,7 +183,7 @@
     <script>
         function order() {
             const order_state = 'PROCESSING';
-            const voucher_no = '';
+            const voucher_no = null;
             const showroom_id = document.getElementById('showroom').value;
             const payment_method = document.getElementById('paymentMethod').value;
             let payment_status,paid_amount;
