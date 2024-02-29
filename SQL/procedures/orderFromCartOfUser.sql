@@ -18,7 +18,7 @@ BEGIN
 			IF ( i = 0)  THEN 
 				res := orderFromCart( order_state ,payment_method ,payment_status, R.CART_ID, voucher_no,showroom_id,paid_amount );
 				i := i+1;
-			ELSIF LOWER( R.CONFIRM_STATUS) = 'not_confirmed' THEN
+			ELSE
 				res := orderFromCart( order_state,payment_method, payment_status,R.CART_ID, voucher_no,showroom_id, 0 );		
 			END IF;
 		ELSIF payment_method = 'OP' AND payment_status = 'PAID' THEN 
