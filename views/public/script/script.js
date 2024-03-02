@@ -54,6 +54,8 @@
                   <a class="card-text" style="font-weight: 100; font-size:20px;" href="${data[i].COMPANY_URL}">${data[i].NAME}</a>
                   <br>
                   <a class="card-text" style="font-weight: 100; font-size:20px;" href="${data[i].CAR_TYPE_URL}">${data[i].TYPE_NAME}</a>
+                  <br>
+                  <p class="card-text">Color: ${data[i].COLOR}</p>
               </div>
           </div>
           <div class="col-md-4">
