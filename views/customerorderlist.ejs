@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My orders</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@v1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+    <link href="https://getbootstrap.com/docs/5.3/assets/css/docs.css" rel="stylesheet">
+    <link rel="stylesheet" href="/CSS/style.css">
+    <script src="/script/script.js"></script>
+    <style>
+    .pay-due-button {
+      margin-top: 10px;
+      width: 75%;
+      font-size: 18px;
+      padding: 15px 30px;
+      border-radius: 8px;
+      background-color: #e44d26; /* Button color */
+      color: #ffffff; /* Text color */
+      border: 2px solid #e44d26; /* Border color */
+      transition: background-color 0.3s;
+    }
+    .pay-due-button:hover {
+      background-color: #e44d26; /* Darker color on hover */
+    }
+    .card {
+    width: 100%;
+    margin: 5px; /* Adjust margin as needed */
+    box-sizing: border-box;
+    border: 1px solid #8239f8; /* Optional: Add borders for better visibility */
+    padding: 10px; /* Optional: Add padding for better spacing */
+    box-shadow: 0 14px 28px rgba(0,0,0,0.25),
+                        0 10px 10px rgba(0,0,0,0.22);
+    }
+    </style>
+</head>
+<body>
+    <%-include('layouts/navbar2.ejs',{authorized: authorized,user_info:user_info}) %>
+    <main>
+        <% if(orderlist.length != 0) {%>
+            <div class="text-center bg-dark text-white p-3">
+              <h1>My Orders</h1>
+          </div>
+        <%}%>
+        <div class="container" id="">
+            <% if(orderlist.length != 0) {%>
+                <% for (let i = 0; i < orderlist.length; i++) { %>
+                    <% var cnt = orderlist[i].CAR_COUNT %>
+                    <div class="card cart-item">
+                      <div class="row no-gutters">
+                        <div class="col-md-4">
+                          <img src="<%= orderlist[i].CAR_IMAGE_URL %>" alt="<%= orderlist[i].name %>" class="card-img">
+                        </div>
+                        <div class="col-md-4">
+                          <div class="card-body">
+                            <h5 class="card-title" style="font-weight: bold;"><%= orderlist[i].MODEL_NAME %></h5>
+                            <p class="card-text"><%= orderlist[i].NAME %></p>
+                            <p class="card-text"><%= orderlist[i].TYPE_NAME %></p>
+                            <p class="card-text">Color: <%= orderlist[i].COLOR %></p>
+                            <p class="card-text" id="price_<%= i %>">Price: BDT <%= orderlist[i].PRICE * cnt %></p>
+                            <p class="card-text">Pick your car(s) from <span style="font-style: italic; font-weight: 600; color: green;"><%=orderlist[i].SHOWROOM_NAME%></span> after delivery</p>
+                          </div>
+                        </div>
+                        <div class="col-md-4">
+                          <div class="card-body">
+                            <p class="card-text">Ordered on: <%=orderlist[i].ORDER_DATE%></p>
+                            <% if (orderlist[i].ORDER_STATE === 'PROCESSING') { %>
+                                <p class="card-text">Order Status: <span style="color: green; font-style: italic; font-weight: 600;">Processing</span></p>
+                            <%} else if(orderlist[i].ORDER_STATE === 'SHIPPING') {%>
+                                <p class="card-text">Order Status: <span style="color: green; font-style: italic; font-weight: 600;">Shipping</span></p>
+                            <%} else {%>
+                                <p class="card-text">Order Status: <span style="color: green; font-style: italic; font-weight: 600;">Delivered</span></p>
+                            <%}%>
+                            <% if (orderlist[i].PAYMENT_STATUS === 'NOT_PAID') { %>
+                              <p class="card-text">Payment Status: <span style="color: red; font-style: italic; font-weight: 600;">Not paid</span></p>
+                              <p class="card-text">Due Amount: BDT <span style="color: red; font-style: italic; font-weight: 600;"><%= orderlist[i].DUE %></span></p>
+                              <button type="button" class="pay-due-button" data-bs-toggle="modal" data-bs-target="#exampleModal" data-order-id="<%= orderlist[i].ORDER_ID %>" data-due-amount="<%= orderlist[i].DUE%>">Pay Due</button>
+                            <% } else { %>
+                              <p class="card-text">Payment Status: <span style="color: green; font-style: italic; font-weight: 600;">PAID</span></p>
+                            <% } %>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                <% } %>  
+            <%}%>
+            <% if(orderlist.length == 0) { %>
+                <h1 style="color: red; margin-top: 25vh;" >No orders !</h1>
+            <%}%>
+        </div>
+        <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Pay Due Amount</h5>
+                        <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <!-- Display Due Amount dynamically -->
+                        <p id="dueAmountLabel">Due Amount: $<span id="dueAmount"></span></p>
+        
+                        <!-- Input fields for card and amount -->
+                        <form id="paymentForm" onsubmit="make_payment()">
+                            <div class="mb-3">
+                                <label for="cardNumber" class="form-label">Card Number</label>
+                                <input type="text" class="form-control" id="cardNumber" placeholder="Enter card number" size="16" maxlength="16" minlength="16" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="amount" class="form-label">Amount</label>
+                                <input type="number" class="form-control" id="amount" placeholder="Enter amount" required>
+                                <br>
+                                <button type="submit" class="btn btn-primary">Make Payment</button>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        
+    </main>
+    <%-include('layouts/footer.ejs',{})%>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+    <script>
+        var modal; // Declare modal in the global scope to make it accessible
+    
+        // Add this script to handle the payment submission and set the due amount dynamically
+        document.addEventListener('DOMContentLoaded', function () {
+            modal = new bootstrap.Modal(document.getElementById('exampleModal'));
+            var dueAmountLabel = document.getElementById('dueAmountLabel');
+            var dueAmountSpan = document.getElementById('dueAmount');
+            var amountInput = document.getElementById('amount');
+    
+            // Add a click event listener to store the active order ID and due amount in the modal
+            $('#exampleModal').on('show.bs.modal', function (event) {
+                var button = $(event.relatedTarget);
+                var dueAmount = button.data('due-amount');
+                var orderId = button.data('order-id');
+    
+                dueAmountLabel.textContent = 'Due Amount: BDT ' + dueAmount;
+                dueAmountSpan.textContent = dueAmount;
+    
+                // Clear input fields when the modal is shown
+                document.getElementById('cardNumber').value = '';
+                document.getElementById('amount').value = '';
+                amountInput.max = dueAmount;
+    
+                // Store data in the modal for later use
+                modal.orderId = orderId;
+                modal.dueAmount = dueAmount;
+            });
+        });
+    
+        function make_payment() {
+            // Get values from the modal inputs
+            var cardNumber = document.getElementById('cardNumber').value;
+            var amount = document.getElementById('amount').value;
+            var orderId = modal.orderId;
+            var dueAmount = modal.dueAmount;
+    
+            // You can perform further actions, such as submitting the payment details
+            // For now, let's just log the values to the console
+            console.log('Card Number:', cardNumber);
+            console.log('Amount:', amount);
+            console.log('Order ID:', orderId);
+            console.log('Due Amount:', dueAmount);
+    
+            fetch('/cart/paydueamount', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ amount, orderId })
+            }).then(res => res.json())
+                .then(res => {
+                    if (res.message == "ok") {
+                        modal.hide();
+                        window.location.href = '/cart/myorders'
+                    }
+                })
+        };
+    </script>
+    
+</body>
+</html>

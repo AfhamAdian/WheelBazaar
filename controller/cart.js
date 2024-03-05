@@ -91,5 +91,46 @@ async function getShowRooms(l_id) {
     }
 }
 
+async function getorderlist(user_id) {
+    try{
+        const sql = `
+        SELECT * FROM
+        ORDERLIST O
+        JOIN CART CT ON (O.CART_ID = CT.CART_ID)
+        JOIN CARS C ON (CT.MODEL_COLOR_ID = C.MODEL_COLOR_ID)
+        JOIN USERS U ON (U.ID = C.COMPANY_ID)
+        JOIN CARTYPE CR ON (C.TYPE_ID = CR.TYPE_ID)
+        JOIN SHOWROOM S ON (O.SHOWROOM_ID = S.SHOWROOM_ID)
+        WHERE CT.CUSTOMER_ID = :user_id
+        `
+        const binds = {user_id:user_id};
+        const result = await execute(sql,binds);
+        return result;
+    }
+    catch(error) {
+        console.log(error);
+    }
+}
 
-module.exports = { getCartInfo, increment, decrement, orderFromCart , getShowRooms };
+async function payDueAmount(amount,orderId) {
+    try {
+        const sql = `
+            BEGIN
+                pay_due_amount(:amount,:orderId);
+            END;
+        `
+        const binds = {
+            amount : amount,
+            orderId : orderId
+        }
+
+        await execute(sql,binds);
+
+    } catch(error) {
+        console.log(error);
+    }
+
+}
+
+
+module.exports = { getCartInfo, increment, decrement, orderFromCart , getShowRooms ,getorderlist,payDueAmount};
