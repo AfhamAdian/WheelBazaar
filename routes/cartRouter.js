@@ -3,7 +3,7 @@ const path = require('path');
 
 const authorization = require('../middlewares/authorization.js');
 const { sendUserData } = require('../controller/logIn.js');
-const { getCartInfo,increment, decrement , getShowRooms ,orderFromCart} = require('../controller/CART.JS');
+const { getCartInfo,increment, decrement , getShowRooms ,orderFromCart,getorderlist,payDueAmount} = require('../controller/CART.JS');
 
 const cartRouter = express.Router();
 
@@ -83,5 +83,25 @@ cartRouter
         }
         res.render('checkout',{authorized: "true",user_info:userDetails,cartProducts:cartInfo,showroom:showroom,total_price:total_price} );
     });
+cartRouter
+    .route('/myorders')
+    .get(authorization,async(req,res)=>{
+        const { email, password } = req.user;
+        const userDetails = await sendUserData(email,password);
+        console.log("userDetails: ", userDetails);
+        const userID = userDetails[0].ID;
+        const orderlist = await getorderlist(userID);
+        res.render('customerorderlist',{authorized: "true",user_info:userDetails,orderlist:orderlist});
+    })
+cartRouter
+    .route('/paydueamount')
+    .post(async(req,res)=>{
+        const {
+            amount,
+            orderId
+        } = req.body;
+        await payDueAmount(amount,orderId);
+        res.json({message: "ok"})
+    })
 
 module.exports = cartRouter;

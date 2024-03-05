@@ -45,9 +45,10 @@
                         </div>
                         <div class="col-md-8">
                           <div class="card-body">
-                            <h5 class="card-title"><%= cartProducts[i].MODEL_NAME %></h5>
+                            <h5 class="card-title" style="font-weight: bold;"><%= cartProducts[i].MODEL_NAME %></h5>
                             <p class="card-text"><%= cartProducts[i].NAME %></p>
                             <p class="card-text"><%= cartProducts[i].TYPE_NAME %></p>
+                            <p class="card-text">Color: <%= cartProducts[i].COLOR %></p>
                             <p class="card-text" id="price_<%= i %>">Price: <%= cartProducts[i].PRICE * cnt %></p>
                             <div class="btn-group">
                               <button type="button" class="btn btn-secondary" id="count-" onclick="decrementCount('<%=i%>',-1,'<%=cartProducts[i].CART_ID%>','<%=cartProducts[i].PRICE%>')">-</button>
