@@ -14,7 +14,7 @@ async function updateStateWithId ( state, id )
                 update_order_state ( :id, :state );
             END;
         `
-        const binds = { state, id };
+        const binds = { id, state };
 
         const result = await execute( sql, binds );
 
