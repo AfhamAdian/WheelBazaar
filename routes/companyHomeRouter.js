@@ -103,6 +103,38 @@ companyHomeRouter
             const result = await updateStateWithId( state, id );
         })
 
+companyHomeRouter
+        .route('/process/:orderId')
+        // dummy get request
+        .get( authorizationCompany , async (req,res) =>
+        {
+            const email = req.user.email;
+            const password = req.user.password;
+
+            const user_info = await sendUserIdFromEmailPass( email, password );
+            const company_id = user_info[0].ID;
+            
+            const id = req.params.orderId;
+            const state = 'PROCESSING';
+
+            const result = await updateStateWithId( state, id );
+            res.status(200).json({ message: 'Order IS IN PROCESSING' });
+        })
+        .post( authorizationCompany , async (req,res) =>
+        {
+            const email = req.user.email;
+            const password = req.user.password;
+
+            const user_info = await sendUserIdFromEmailPass( email, password );
+            const company_id = user_info[0].ID;
+            
+            const id = req.params.orderId;
+            const state = 'PROCESSING';
+
+            const result = await updateStateWithId( state, id );
+        })
+
+
 
 
 module.exports = companyHomeRouter;
