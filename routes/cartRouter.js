@@ -58,7 +58,7 @@ cartRouter
         
         const result = await orderFromCart( userID,order_state, payment_method, payment_status, voucher_no, showroom_id, paid_amount );
         
-        res.status(200).json(
+        res.json(
             {
                 status : "success"
             }

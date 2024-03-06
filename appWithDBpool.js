@@ -4,6 +4,7 @@ const cookieParser = require('cookie-parser');
 const morgan = require('morgan');
 const dotenv = require('dotenv');
 const oracledb = require('./DB/dbConnect.js');
+const bodyParser = require('body-parser')
 
 const app = express();
 app.set("view engine","ejs");
@@ -13,6 +14,7 @@ app.use(express.json());
 app.use(cookieParser());
 app.use(express.urlencoded({extended : true}));
 app.use(morgan('dev'));
+app.use(bodyParser.urlencoded({ extended: true }));
 
 // creating Server
 const PORT = 3000;

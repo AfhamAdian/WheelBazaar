@@ -2,7 +2,8 @@ const express = require('express');
 const path = require('path');
 const { authorizationCompany } = require('../middlewares/authorization.js');
 const { sendUserIdFromEmailPass,sendUserDataByIdGeneral } = require('../controller/logIn.js');
-const { updateStateWithId } = require('../controller/company.js');
+const { updateStateWithId ,getShowrooms,getCarTypes , filterShowrooms } = require('../controller/company.js');
+const { execute } = require('../DB/dbConnect.js');
 
 // Assuming __dirname is the 'route' directory
 const routeDirectory = __dirname;
@@ -19,6 +20,8 @@ const filePathInView = path.join(viewDirectory, 'page1.html');
 
 const companyHomeRouter = express.Router();
 
+let company_info,user_info,car_types;
+
 companyHomeRouter
         .route('/')
         .get( authorizationCompany, async (req,res) =>
@@ -28,14 +31,17 @@ companyHomeRouter
                 const email = req.user.email;
                 const password = req.user.password;
 
-                const user_info = await sendUserIdFromEmailPass( email, password );
+                user_info = await sendUserIdFromEmailPass( email, password );
                 const company_id = user_info[0].ID;
                 console.log( 'logged in company id : ' + company_id );
 
-                const company_info = await sendUserDataByIdGeneral( company_id );
+                company_info = await sendUserDataByIdGeneral( company_id );
                 console.log( company_info );
 
-                res.render('companyHome',{company_info: company_info, authorized: "true", user:"company", user_info: user_info});
+                const ct_sql="SELECT TYPE_NAME,CAR_TYPE_URL FROM CARTYPE";
+                car_types = await execute(ct_sql,{})
+
+                res.render('companyHome',{company_info: company_info, authorized: "true", user:"company", user_info: user_info , car_types: car_types});
             }catch(err){
                 console.log(err);
             }
@@ -132,6 +138,23 @@ companyHomeRouter
             const state = 'PROCESSING';
 
             const result = await updateStateWithId( state, id );
+        })
+companyHomeRouter
+        .route('/showrooms')
+        .get(authorizationCompany,async(req,res)=> {
+            const showrooms = await getShowrooms();
+            user_info = await sendUserIdFromEmailPass( req.user.email, req.user.password );
+            company_info = await sendUserDataByIdGeneral( user_info[0].ID );
+            car_types = await getCarTypes();
+            res.render('showroom',{company_info: company_info, authorized: "true", user:"company", user_info: user_info , car_types: car_types,showrooms: showrooms})
+        })
+        .post(async(req,res)=>{
+            const {
+                division,
+                city
+            } = req.body;
+            const showrooms = await filterShowrooms(division,city);
+            res.json(showrooms);
         })
 
 
