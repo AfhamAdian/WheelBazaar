@@ -1,7 +1,7 @@
 const express = require('express');
 const path = require('path');
 
-const authorization = require('../middlewares/authorization.js');
+const { authorization } = require('../middlewares/authorization.js');
 const { sendUserData } = require('../controller/logIn.js');
 const { getCartInfo,increment, decrement , getShowRooms ,orderFromCart,getorderlist,payDueAmount} = require('../controller/CART.JS');
 

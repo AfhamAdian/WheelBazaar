@@ -18,7 +18,6 @@ app.use(morgan('dev'));
 const PORT = 3000;
 app.listen(PORT, ()=> console.log('server started to listening at port 3000'));
 
-
 // initializing the DataBase Pool
 oracledb.init();
 
@@ -34,16 +33,9 @@ app.use('/login', require('./routes/logInRouter.js'));
 app.use('/signup', require('./routes/signUpRouter.js'));
 app.use('/logout', require('./routes/logOutRouter.js'));
 app.use('/cart', require('./routes/cartRouter.js'));
-
-app.use((req, res) => {
-    res.status(404).sendFile('./views/html.html', { root: __dirname });
-});
+app.use('/companyHome', require('./routes/companyHomeRouter.js'));
 
 /// 404 Page Ridercting 
 app.use((req, res) => {
     res.status(404).sendFile('./views/404.html', { root: __dirname });
 });
-    
-
-
-// now we will 

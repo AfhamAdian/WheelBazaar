@@ -18,16 +18,16 @@ create pull req
 
 now admin merges the pull req
 
-xome back to vs code :
+
+come back to vs code :
+
 switch to main branch
 git pull
 delete branch locally : git branch -d "branchname"
 
 
 
-
-
-How to merge form vs cpe :::
+How to merge form vs code :::
 
 Step 1: Clone the repository or update your local repository with the latest changes.
 

@@ -5,7 +5,7 @@ const { result } = require('lodash');
 const { searchByCompany, searchByType, searchByName, test , sendLocationDataByLocationId , updateCustomerData } = require('../controller/mainHome.js');
 const { addToCart } = require('../controller/mainHome.js');
 const { type } = require('os');
-const authorization = require('../middlewares/authorization.js');
+const { authorization } = require('../middlewares/authorization.js');
 const decodeTokenFromCookies = require('../utils/decodeToken.js');
 
 
@@ -168,7 +168,7 @@ mainHomeRouter
                 res.render('customerInfo',{user_info:userDetails,authorized:"true",location:[{LOCATION_ID:0,COUNTRY:"",DIVISION:"",CITY:""}]});
             }
             else {
-                const location =await sendLocationDataByLocationId(userDetails[0].LOCATION_ID);
+                const location = await sendLocationDataByLocationId(userDetails[0].LOCATION_ID);
                 res.render('customerInfo',{user_info:userDetails,authorized:"true",location:location});
             }
             
@@ -210,5 +210,23 @@ mainHomeRouter
                 res.json({message: "ok"})
             }
         })
+
+
+
+
+
+
+
+
+
+
+    // here i will implement the route for /company 
+
+    // mainHomeRouter
+    //     .route('/companyHome')
+    //     .get( async (req,res) =>
+    //     {
+    //         res.render('companyHome');
+    //     })
 
     module.exports = mainHomeRouter;

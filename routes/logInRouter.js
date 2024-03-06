@@ -5,9 +5,9 @@ const jwt = require('jsonwebtoken');
 const { execute } = require('../DB/dbConnect.js');
 require('dotenv').config();
 
-const { authUser,sendUserData,sendUserDataByUserName } = require('../controller/logIn.js');
+const { authUser,sendUserData,sendUserDataByUserName, authCompany } = require('../controller/logIn.js');
 const { updatePassword } = require('../controller/updatePassWord.js');
-const authorization = require('../middlewares/authorization.js');
+const { authorization } = require('../middlewares/authorization.js');
 
 // Assuming __dirname is the 'route' directory
 const routeDirectory = __dirname;
@@ -23,6 +23,58 @@ const filePathInView = path.join(viewDirectory, '');
 
 
 const loginRouter = express.Router();
+
+
+// company login route 
+loginRouter
+    .route('/company')
+    .get( async (req,res) =>
+    {
+        res.render('loginCompany',{authorized: "false"});
+    })
+
+    .post( async ( req, res ) => 
+    {
+        // here we will take login data from user and check if it is valid or not
+        // if valid then redirect to home page
+        // else show error message
+
+        try{
+            const {
+                email,
+                password
+            } = req.body;
+
+            console.log(email);
+            console.log(password);
+
+            console.log('After auth Company');
+            const bool = await authCompany( email, password );         // checks if company is valid or not
+
+            if( bool == true ){
+
+                const payLoad = {
+                    email: email,
+                    password: password,
+                }
+                console.log('Email:', email);
+
+                const accessToken = jwt.sign( payLoad, process.env.ACCESS_TOKEN_SECRET );    
+                res.cookie('tokenCompany', accessToken, { httpOnly: true , secure: false, maxAge: 900000});
+                res.cookie('isLoggedInCompany',true, { httpOnly: false , secure: false, maxAge: 900000});
+                res.status(200).json ( { message: 'Company Login successful' } );
+
+                console.log('Company Logged In');
+            }
+            else{
+                res.status(401).json(  { message: 'Invalid Company Email or Password' } );
+            }
+        }catch(err){
+            console.log(err);
+        }
+    })
+
+
 
 loginRouter
     .route('/')
@@ -124,5 +176,17 @@ loginRouter
         console.log(company_names);
         res.render('index', {company_names:company_names,car_types:car_types,authorized: "true", user : user} );
     })
+
+
+
+
+// Here I will implement /company route
+
+
+
+
+
+
+
 
 module.exports = loginRouter;

@@ -1,13 +1,16 @@
-date-fns
-uuid
-lodash
-express
-oracledb
-ejs
-bootstrap
+date-fns    
+uuid        
+lodash      
+express     
+oracledb    
+ejs         
+bootstrap   
 cookie-parser
 jsonwebtoken
-dotenv
+dotenv      
+morgan
+nodemon
+cors 
 
 .vscode
 

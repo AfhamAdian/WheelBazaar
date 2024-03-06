@@ -2,7 +2,7 @@ const express = require('express');
 const path = require('path');
 const jwt = require('jsonwebtoken');
 
-const authorization = require('../middlewares/authorization.js');
+const { authorization } = require('../middlewares/authorization.js');
 
 const logOutRouter = express.Router();
 
