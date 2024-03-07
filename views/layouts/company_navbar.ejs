@@ -20,19 +20,9 @@
             </a>
           </li>
           <li>
-            <a class="nav-link" href="" role="button">
+            <a class="nav-link" href="/companyHome/cars" role="button">
                 Cars
             </a>
-          </li>
-          <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle" href="" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-              Car types
-            </a>
-            <ul class="dropdown-menu">
-              <%for(let i=0;i<car_types.length;i++) {%>
-                <li><button class="dropdown-item" name="type_buttons"><%=car_types[i].TYPE_NAME%></button></li>
-              <%}%>
-            </ul>
           </li>
         </ul>
         <form class="d-flex" role="search" id="search" onsubmit="fetchResultsByName(event,'<%=user_info[0].ID%>')">

@@ -60,14 +60,14 @@ loginRouter
                 console.log('Email:', email);
 
                 const accessToken = jwt.sign( payLoad, process.env.ACCESS_TOKEN_SECRET );    
-                res.cookie('tokenCompany', accessToken, { httpOnly: true , secure: false, maxAge: 900000});
-                res.cookie('isLoggedInCompany',true, { httpOnly: false , secure: false, maxAge: 900000});
+                res.cookie('tokenCompany', accessToken, { httpOnly: true , secure: false});
+                res.cookie('isLoggedInCompany',true, { httpOnly: false , secure: false});
                 res.status(200).json ( { message: 'Company Login successful' } );
 
                 console.log('Company Logged In');
             }
             else{
-                res.status(401).json(  { message: 'Invalid Company Email or Password' } );
+                res.status(401).json({message: 'Invalid Company Email or Password'});
             }
         }catch(err){
             console.log(err);
