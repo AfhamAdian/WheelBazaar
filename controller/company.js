@@ -96,4 +96,20 @@ async function getOrderlistByCompanyId(id) {
     }
 }
 
-module.exports = { updateStateWithId , getShowrooms ,getCarTypes , filterShowrooms ,getOrderlistByCompanyId };
+async function getAllCars(id) {
+    try {
+        const sql = `
+            SELECT * FROM
+            CARS C 
+            JOIN CARTYPE CT ON (C.TYPE_ID = CT.TYPE_ID)
+            WHERE C.COMPANY_ID = :id
+        `
+        const binds = {id:id}
+        const result = await execute(sql,binds)
+        return result;
+    } catch(error) {
+        console.log(error)
+    }
+}
+
+module.exports = { updateStateWithId , getShowrooms ,getCarTypes , filterShowrooms ,getOrderlistByCompanyId , getAllCars };

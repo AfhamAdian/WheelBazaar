@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Cars</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@v1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+    <link href="https://getbootstrap.com/docs/5.3/assets/css/docs.css" rel="stylesheet">
+    <script src="/script/script.js"></script>
+    <link rel="stylesheet" href="/CSS/style.css">
+    <style>
+        .filter-btn {
+            color: green;
+            border-color: green;
+            border-radius: 5px;
+            border-width: 2px;
+            font-weight: 600;
+            width: 25%;
+            height: 100%;
+        }
+    </style>
+  </head>
+  <body>
+    <%-include('layouts/company_navbar.ejs', {user_info:company_info})%>
+    <main>
+        <div class="filter">
+            <div class="container container-fluid">
+                <div class="row">
+                    <div class="col-md-8">
+                        <h5 style="margin-left: 10%;font-style: italic;">Showing <span style="color: red;" id="lengthhh"><%=cars.length%></span> result(s)...</h5>
+                    </div>
+                    <div class="col-md-4">
+                        <button type="button" class="btn btn-outline-success filter-btn float-end" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                            Filter
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <br>
+        <div class="container" id="searchRes">
+            <% if(cars.length != 0) { %>
+                <% for(let i=0;i<cars.length;i++) { %>
+                    <div class="card mb-3">
+                        <div class="row no-gutters">
+                            <div class="col-md-4">
+                                <a href="">
+                                    <img src="<%= cars[i].CAR_IMAGE_URL %>" class="card-img" style="height: 100%;" alt="...">
+                                </a>
+                            </div>
+                              <div class="col-md-4">
+                                  <div class="card-body">
+                                      <a class="card-title" href=""><%= cars[i].MODEL_NAME %></a>
+                                      <br>
+                                      <a class="card-text" style="font-weight: 100; font-size:20px;" href=""><%= cars[i].TYPE_NAME %></a>
+                                      <br>
+                                      <p class="card-text">Color: <%= cars[i].COLOR %></p>
+                                  </div>
+                              </div>
+                              <div class="col-md-4">
+                                <div class="card-body">
+                                  <p class="card-text">Price: <%= cars[i].PRICE %></p>
+                                  <p class="card-text">Stock: <%= cars[i].STOCK %></p>
+                                  <p class="card-text">Warranty: <%= cars[i].WARRANTY %> years</p>
+                                </div>
+                              </div>
+                        </div>
+                    </div>
+                <% } %>
+            <% } %>
+        </div>
+    </main>
+    <%-include('layouts/footer.ejs')%>
+  </body>
+</html>

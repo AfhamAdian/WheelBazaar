@@ -2,7 +2,7 @@ const express = require('express');
 const path = require('path');
 const { authorizationCompany } = require('../middlewares/authorization.js');
 const { sendUserIdFromEmailPass,sendUserDataByIdGeneral } = require('../controller/logIn.js');
-const { updateStateWithId ,getShowrooms,getCarTypes , filterShowrooms , getOrderlistByCompanyId } = require('../controller/company.js');
+const { updateStateWithId ,getShowrooms,getCarTypes , filterShowrooms , getOrderlistByCompanyId ,getAllCars } = require('../controller/company.js');
 const { execute } = require('../DB/dbConnect.js');
 
 // Assuming __dirname is the 'route' directory
@@ -38,10 +38,7 @@ companyHomeRouter
                 company_info = await sendUserDataByIdGeneral( company_id );
                 console.log( company_info );
 
-                const ct_sql="SELECT TYPE_NAME,CAR_TYPE_URL FROM CARTYPE";
-                car_types = await execute(ct_sql,{})
-
-                res.render('companyHome',{company_info: company_info, authorized: "true", user:"company", user_info: user_info , car_types: car_types});
+                res.render('companyHome',{company_info: company_info, authorized: "true", user:"company", user_info: user_info});
             }catch(err){
                 console.log(err);
             }
@@ -134,8 +131,7 @@ companyHomeRouter
             const showrooms = await getShowrooms();
             user_info = await sendUserIdFromEmailPass( req.user.email, req.user.password );
             company_info = await sendUserDataByIdGeneral( user_info[0].ID );
-            car_types = await getCarTypes();
-            res.render('showroom',{company_info: company_info, authorized: "true", user:"company", user_info: user_info , car_types: car_types,showrooms: showrooms})
+            res.render('showroom',{company_info: company_info, authorized: "true", user:"company", user_info: user_info ,showrooms: showrooms})
         })
         .post(async(req,res)=>{
             const {
@@ -152,11 +148,18 @@ companyHomeRouter
             user_id = await sendUserIdFromEmailPass(req.user.email,req.user.password)
             company_info = await sendUserDataByIdGeneral( user_id[0].ID );
             const orderlist = await getOrderlistByCompanyId(user_id[0].ID);
-            car_types = await getCarTypes();
-            res.render('companyOrder',{company_info: company_info, authorized: "true", user:"company", car_types: car_types , orderlist:orderlist})
+            res.render('companyOrder',{company_info: company_info, authorized: "true", user:"company", orderlist:orderlist})
         })
         .post(async(req,res)=>{
 
+        })
+companyHomeRouter
+        .route('/cars')
+        .get(authorizationCompany,async(req,res)=>{
+            user_id = await sendUserIdFromEmailPass(req.user.email,req.user.password)
+            company_info = await sendUserDataByIdGeneral( user_id[0].ID );
+            const cars = await getAllCars(company_info[0].ID);
+            res.render('companyCars',{company_info: company_info, authorized: "true", user:"company", cars:cars })
         })
 
 
