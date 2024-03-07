@@ -1,0 +1,65 @@
+<nav class="navbar navbar-expand-lg bg-body-tertiary" data-bs-theme="dark" >
+    <div class="container-fluid">
+      <a class="navbar-brand" href="" style="color: hsl(41, 75%, 58%);font-size: x-large;font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;">WheelBazaar</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+          <li class="nav-item">
+            <a class="nav-link active" aria-current="page" href="/companyHome">Home</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/companyHome/showrooms" role="button">
+              Showrooms
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/companyHome/orders" role="button">
+                Orders
+            </a>
+          </li>
+          <li>
+            <a class="nav-link" href="" role="button">
+                Cars
+            </a>
+          </li>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+              Car types
+            </a>
+            <ul class="dropdown-menu">
+              <%for(let i=0;i<car_types.length;i++) {%>
+                <li><button class="dropdown-item" name="type_buttons"><%=car_types[i].TYPE_NAME%></button></li>
+              <%}%>
+            </ul>
+          </li>
+        </ul>
+        <form class="d-flex" role="search" id="search" onsubmit="fetchResultsByName(event,'<%=user_info[0].ID%>')">
+          <input class="form-control me-2" type="search" placeholder="Search cars" aria-label="Search" id="searchBar" name="searchBar" required="true">
+          <button class="btn btn-outline-warning me-2"  type="submit" id="searchButton">Search</button>
+        </form>
+        <div class="circle-container" onclick="toggleSidebar()">
+            <div style="transform: scale(2); margin-top: -6px;">
+              <i class="bi bi-person" style="cursor: pointer;"></i> 
+            </div>
+          </div>
+
+          <div id="sidebar">
+            <button type="button" class="btn-close" onclick="toggleSidebar()" aria-label="Close"></button>
+            <!-- Add sidebar content here -->
+            <div class="user-info">
+              <h4><%=user_info[0].NAME%></h4>
+              <p>User ID: <%=user_info[0].ID%></p>
+            </div>
+          
+            <!-- Sidebar Buttons -->
+            <ul class="sidebar-buttons">
+              <li><a href="/companyHome"><i class="bi bi-house-door" name="sidebar_buttons"></i> Home</a></li>
+              <li><a href="/companyHome/myinfo"><i class="bi bi-person" name="sidebar_buttons"></i> My Information</a></li>
+              <li><a href="/logout"><i class="bi bi-box-arrow-right" name="logout"></i> Logout</a></li>             
+             </ul>
+    </div>
+</div>
+    </div>
+</nav>

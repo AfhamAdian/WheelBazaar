@@ -1,0 +1,258 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>My Orders</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@v1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+    <link href="https://getbootstrap.com/docs/5.3/assets/css/docs.css" rel="stylesheet">
+    <script src="/script/script.js"></script>
+    <link rel="stylesheet" href="/CSS/style.css">
+    <style>
+        .see-order-btn {
+            display: block;
+            width: 100%;
+            padding: 10px;
+            background-color: #e44d26;
+            color: #fff;
+            text-align: center;
+            text-decoration: none;
+            font-size: 18px;
+            margin-top: 20px;
+            border: none;
+            cursor: pointer;
+        }
+        .change-state-button {
+            width: 60%;
+            font-size: 18px;
+            padding: 15px 30px;
+            border-radius: 8px;
+            background-color: #e44d26;
+            color: #ffffff;
+            border: 2px solid #e44d26;
+            transition: background-color 0.3s;
+        }
+        .pay-due-button:hover {
+            background-color: #e44d26;
+        }
+        .card {
+            width: 100%;
+            margin: 5px;
+            box-sizing: border-box;
+            border: 1px solid #8239f8;
+            padding: 10px; 
+            box-shadow: 0 14px 28px rgba(0,0,0,0.25),
+                                0 10px 10px rgba(0,0,0,0.22);
+        }
+        .filter-btn {
+            color: green;
+            border-color: green;
+            border-radius: 5px;
+            border-width: 2px;
+            font-weight: 600;
+            width: 25%;
+            height: 100%;
+        }
+        .remove-filter-btn {
+            display: block;
+            width: 100%;
+            padding: 10px;
+            background-color: red;
+            color: #fff;
+            text-align: center;
+            text-decoration: none;
+            font-size: 18px;
+            margin-top: 20px;
+            border: none;
+            cursor: pointer;
+        }
+        label {
+            display: block;
+            margin-bottom: 10px; 
+            font-weight: 600;
+            font-size: 100%;
+        }
+        .column {
+            flex: 1;
+            margin-right: 20px;
+        }
+    </style>
+  </head>
+  <body>
+    <%-include('layouts/company_navbar.ejs', {car_types:car_types,user_info:company_info})%>
+    <main>
+        <div class="filter">
+            <div class="container container-fluid">
+                <div class="row">
+                    <div class="col-md-8">
+                        <h5 style="margin-left: 10%;font-style: italic;">Showing <span style="color: red;" id="lengthhh"><%=orderlist.length%></span> result(s)...</h5>
+                    </div>
+                    <div class="col-md-4">
+                        <button type="button" class="btn btn-outline-success filter-btn float-end" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                            Filter
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <br>
+        <div class="container" id="searchRes">
+            <% if(orderlist.length != 0) {%>
+                <% for (let i = 0; i < orderlist.length; i++) { %>
+                    <div class="card cart-item">
+                        <div class="row no-gutters">
+                        <div class="col-md-4">
+                            <img src="<%= orderlist[i].CAR_IMAGE_URL %>" alt="<%= orderlist[i].name %>" class="card-img">
+                        </div>
+                        <div class="col-md-4">
+                            <div class="card-body">
+                            <h5 class="card-title" style="font-weight: bold;"><%= orderlist[i].MODEL_NAME %></h5>
+                            <p class="card-text">Color: <%= orderlist[i].COLOR %></p>
+                            <P class="card-text">Ordered by: <span style="font-style: italic;"><strong><%=orderlist[i].NAME %></strong></span></P>
+                            <p class="card-text">Phone: <%= orderlist[i].PHONE_NUMBER %></p>
+                            <p class="card-text">Email: <%= orderlist[i].EMAIL %></p>
+                            <p class="card-text">To be delivered to <span style="font-style: italic; font-weight: 600; color: green;"><%=orderlist[i].SHOWROOM_NAME%></span></p>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="card-body">
+                            <p class="card-text">Ordered on: <%=orderlist[i].ORDER_DATE%></p>
+                            <p class="card-text" id="price_<%= i %>">Price: BDT <%= orderlist[i].PRICE * orderlist[i].CAR_COUNT %></p>
+                            <% if (orderlist[i].ORDER_STATE === 'PROCESSING') { %>
+                                <p class="card-text">Order Status: <span style="color: green; font-style: italic; font-weight: 600;">Processing</span></p>
+                            <%} else if(orderlist[i].ORDER_STATE === 'SHIPPING') {%>
+                                <p class="card-text">Order Status: <span style="color: green; font-style: italic; font-weight: 600;">Shipping</span></p>
+                            <%} else {%>
+                                <p class="card-text">Order Status: <span style="color: green; font-style: italic; font-weight: 600;">Delivered</span></p>
+                            <%}%>
+                            <% if (orderlist[i].PAYMENT_STATUS === 'NOT_PAID') { %>
+                                <p class="card-text">Payment Status: <span style="color: red; font-style: italic; font-weight: 600;">Not paid</span></p>
+                                <p class="card-text">Due Amount: BDT <span style="color: red; font-style: italic; font-weight: 600;"><%= orderlist[i].DUE %></span></p>
+                            <% } else { %>
+                                <p class="card-text">Payment Status: <span style="color: green; font-style: italic; font-weight: 600;">PAID</span></p>
+                            <% } %>
+                            <% if(orderlist[i].ORDER_STATE === 'PROCESSING') { %>
+                                <button type="button" class="change-state-button" data-order-id="<%= orderlist[i].ORDER_ID %>" onclick="change_state(this)">Ship</button>
+                            <% } %>
+                            <% if(orderlist[i].ORDER_STATE === 'SHIPPING') { %>
+                                <button type="button" class="change-state-button" data-order-id="<%= orderlist[i].ORDER_ID %>" onclick="change_state(this)">Delivered?</button>
+                            <% } %>
+                            </div>
+                        </div>
+                        </div>
+                    </div>
+                <% } %>  
+            <%}%>
+            <% if(orderlist.length == 0) { %>
+                <h1 style="color: red; margin-top: 25vh;" >No orders found !</h1>
+            <%}%>
+        </div>
+        <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" style="margin-top: 4%;margin-left: 22%;">
+            <div class="modal-dialog" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title" id="exampleModalLabel">Filter orders</h5>
+                  <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true" style="border-radius: 3px;">&times;</span>
+                  </button>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <div class="form-group">
+                            <div class="column">
+                                <label for="state">Order state: </label>
+                                <form>
+                                    <label>
+                                      <input type="radio" name="options" value="option1">
+                                      Processing
+                                    </label>
+                                    <label>
+                                      <input type="radio" name="options" value="option2">
+                                      Shipping
+                                    </label>
+                                    <label>
+                                      <input type="radio" name="options" value="option3">
+                                      Delivered
+                                    </label>
+                                </form>
+                                <label for="city">Payment status: </label>
+                                <form>
+                                    <label>
+                                      <input type="radio" name="options" value="option1">
+                                      Paid
+                                    </label>
+                                    <label>
+                                      <input type="radio" name="options" value="option2">
+                                      Not paid
+                                    </label>
+                                </form>
+                            </div>
+                            <div class="column">
+                                <label for="">
+                                    Order date: 
+                                </label>
+                                <label>
+                                    From:
+                                    <input type="date" name="date1">
+                                    To:
+                                    <input type="date" name="date2">
+                                  </label>
+                                  <label>
+                                    Min-price:
+                                    <input type="text" name="price1" placeholder="Enter price">
+                                  </label>
+                                  <label>
+                                    Max-price:
+                                    <input type="text" name="price2" placeholder="Enter price">
+                                  </label>
+                            </div>
+                         </div>
+                        <div>
+                            <button class="see-order-btn" onclick="filter(event)" data-bs-dismiss="modal">Apply filter</button>
+                            <button class="remove-filter-btn" onclick="remove()">Remove filter</button>
+                        </div>
+                    </form>
+                </div>
+              </div>
+            </div>
+          </div>
+    </main>
+    <%-include('layouts/footer.ejs')%>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+    <script>
+        function change_state(button) {
+            var orderId = button.getAttribute('data-order-id');
+            var buttontext = button.textContent;
+            if(buttontext == "Ship") {
+                fetch('/companyHome/ship',{
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({orderId})
+                }).then(res=>res.json())
+                .then(res=>{
+                    if(res.message == "ok") {
+                        window.location.href = '/companyHome/orders'
+                    }
+                })
+            }
+            if(buttontext == "Delivered?") {
+                fetch('/companyHome/delivered',{
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({orderId})
+                }).then(res=>res.json())
+                .then(res=>{
+                    if(res.message == "ok") {
+                        window.location.href = '/companyHome/orders'
+                    }
+                })
+            }
+        }
+    </script>
+  </body>
+</html>
