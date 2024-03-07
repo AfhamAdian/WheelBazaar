@@ -77,4 +77,23 @@ async function filterShowrooms(division,city) {
     }
 }
 
-module.exports = { updateStateWithId , getShowrooms ,getCarTypes , filterShowrooms };
+async function getOrderlistByCompanyId(id) {
+    try {
+        const sql = `
+            SELECT * FROM
+            ORDERLIST O 
+            JOIN CART CT ON (O.CART_ID = CT.CART_ID)
+            JOIN CARS C ON (CT.MODEL_COLOR_ID = C.MODEL_COLOR_ID)
+            JOIN USERS U ON (U.ID = CT.CUSTOMER_ID)
+            JOIN SHOWROOM S ON (S.SHOWROOM_ID = O.SHOWROOM_ID)
+            WHERE C.COMPANY_ID = :id
+        `
+        const binds = {id:id}
+        const result = await execute(sql,binds);
+        return result;
+    } catch(error) {
+        console.log(error)
+    }
+}
+
+module.exports = { updateStateWithId , getShowrooms ,getCarTypes , filterShowrooms ,getOrderlistByCompanyId };

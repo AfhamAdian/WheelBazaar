@@ -2,7 +2,7 @@ const express = require('express');
 const path = require('path');
 const { authorizationCompany } = require('../middlewares/authorization.js');
 const { sendUserIdFromEmailPass,sendUserDataByIdGeneral } = require('../controller/logIn.js');
-const { updateStateWithId ,getShowrooms,getCarTypes , filterShowrooms } = require('../controller/company.js');
+const { updateStateWithId ,getShowrooms,getCarTypes , filterShowrooms , getOrderlistByCompanyId } = require('../controller/company.js');
 const { execute } = require('../DB/dbConnect.js');
 
 // Assuming __dirname is the 'route' directory
@@ -48,8 +48,7 @@ companyHomeRouter
         });
 
 companyHomeRouter
-        .route('/ship/:orderId')
-        // dummy get request
+        .route('/ship')
         .get( authorizationCompany , async (req,res) =>
         {
             const email = req.user.email;
@@ -64,22 +63,16 @@ companyHomeRouter
             const result = await updateStateWithId( state, id );
             res.status(200).json({ message: 'Order Shipped' });
         })
-        .post( authorizationCompany , async (req,res) =>
+        .post(async (req,res) =>
         {
-            const email = req.user.email;
-            const password = req.user.password;
-
-            const user_info = await sendUserIdFromEmailPass( email, password );
-            const company_id = user_info[0].ID;
-            
-            const id = req.params.orderId;
+            const id = req.body.orderId;
             const state = 'SHIPPING';
-
             const result = await updateStateWithId( state, id );
+            res.json({message : "ok"})
         })
 
 companyHomeRouter
-        .route('/delivered/:orderId')
+        .route('/delivered')
         // dummy get request
         .get( authorizationCompany , async (req,res) =>
         {
@@ -95,18 +88,13 @@ companyHomeRouter
             const result = await updateStateWithId( state, id );
             res.status(200).json({ message: 'Order delivered' });
         })
-        .post( authorizationCompany , async (req,res) =>
+        .post( async (req,res) =>
         {
-            const email = req.user.email;
-            const password = req.user.password;
-
-            const user_info = await sendUserIdFromEmailPass( email, password );
-            const company_id = user_info[0].ID;
-            
-            const id = req.params.orderId;
+            const id = req.body.orderId;
             const state = 'DELIVERED';
 
             const result = await updateStateWithId( state, id );
+            res.json({message : "ok"})
         })
 
 companyHomeRouter
@@ -156,6 +144,19 @@ companyHomeRouter
             const showrooms = await filterShowrooms(division,city);
             res.json(showrooms);
         })
+companyHomeRouter
+        .route('/orders')
+        .get(authorizationCompany,async(req,res)=>{
+            user_id = await sendUserIdFromEmailPass(req.user.email,req.user.password)
+            company_info = await sendUserDataByIdGeneral( user_id[0].ID );
+            const orderlist = await getOrderlistByCompanyId(user_id[0].ID);
+            car_types = await getCarTypes();
+            res.render('companyOrder',{company_info: company_info, authorized: "true", user:"company", car_types: car_types , orderlist:orderlist})
+        })
+        .post(async(req,res)=>{
+
+        })
+
 
 
 
