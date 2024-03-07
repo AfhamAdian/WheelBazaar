@@ -2,7 +2,7 @@ const express = require('express');
 const { execute } = require('../DB/dbConnect.js');
 const path = require('path');
 const { result } = require('lodash');
-const { searchByCompany, searchByType, searchByName, test , sendLocationDataByLocationId, addComment, editComment , updateCustomerData } = require('../controller/mainHome.js');
+const { searchByCompany, searchByType, searchByName, test , sendLocationDataByLocationId, addComment, editComment , updateCustomerData , get_user_rating ,get_user_comment ,get_all_comment ,get_average_rating , is_eligible_to_review , is_rated_by_user , addRating  , updateRating} = require('../controller/mainHome.js');
 const { addToCart } = require('../controller/mainHome.js');
 const { type } = require('os');
 const { authorization } = require('../middlewares/authorization.js');
@@ -149,15 +149,26 @@ mainHomeRouter
             WHERE C.MODEL_COLOR_ID = :car_id`
             const binds = {car_id};
             const product = await execute(sql,binds);
+            let user_rating = await get_user_rating(car_id,user_id)
+            if(user_rating.length == 0) {
+                user_rating = [{
+                    RATE : 0,
+                }]
+            }
+            const user_comment = await get_user_comment(car_id,user_id)
+            const all_comment = await get_all_comment(car_id,user_id)
+            const average_rating = await get_average_rating(car_id);
+            const eligible = await is_eligible_to_review(car_id,user_id)
+            const rated = await is_rated_by_user(car_id,user_id)
             var authorized;
             if(user_id == 0) {
                 authorized = "false";
-                res.render('car_details',{authorized:authorized,user_info:[{ID: 0,NAME:"DDD"}],product:product})
+                res.render('car_details',{authorized:authorized,user_info:[{ID: 0,NAME:"DDD"}],product:product,user_rating:user_rating,user_comment:user_comment,all_comment:all_comment,average_rating:average_rating,eligible:eligible,rated:rated})
             }
             else {
                 authorized = "true";
                 const user_info = await sendUserDataByID(user_id);
-                res.render('car_details',{authorized:authorized,user_info:user_info,product:product})
+                res.render('car_details',{authorized:authorized,user_info:user_info,product:product,user_rating:user_rating,user_comment:user_comment,all_comment:all_comment,average_rating:average_rating,eligible:eligible,rated:rated})
             }
         })
 
@@ -165,7 +176,7 @@ mainHomeRouter
         .route('/cardetails/comment')
         .post( authorization, async(req,res)=>{
             try {
-                console.log(req.body);
+                console.log(req.body); 
 
                 const {email,password} = req.user;
                 const user_info = await sendUserData(email,password);
@@ -207,9 +218,9 @@ mainHomeRouter
                 const user_info = await sendUserData(email,password);
                 const user_id = user_info[0].ID;
 
-                const { model_color_id, rating } = req.body;
+                const { model_color_id, i } = req.body;
 
-                const result = await addRating(model_color_id, user_id, rating);
+                const result = await addRating(model_color_id, user_id, i);
                 res.status(200).json({message: "product rated successfully"});
 
             }catch(error) {
@@ -227,9 +238,9 @@ mainHomeRouter
                 const user_info = await sendUserData(email,password);
                 const user_id = user_info[0].ID;
 
-                const { model_color_id, rating } = req.body;
+                const { model_color_id, i } = req.body;
 
-                const result = await updateRating(model_color_id, user_id, rating);
+                const result = await updateRating(model_color_id, user_id, i);
                 res.status(200).json({message: "raitng updated successfully"});
 
             }catch(error) {

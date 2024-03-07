@@ -1,6 +1,7 @@
 const express = require('express');
 const { execute } = require('../DB/dbConnect.js');
 const path = require('path');
+const { use } = require('../routes/logInRouter.js');
 
 
 async function searchByCompany( companyName ) 
@@ -179,5 +180,141 @@ async function editComment(comment_id, comment_text) {
     }
 }
 
+async function get_user_rating(car_id,user_id) {
+    try {
+        const sql = `
+            SELECT NVL(RATING,0) RATE
+            FROM RATING 
+            WHERE MODEL_COLOR_ID = :car_id AND CUSTOMER_ID = :user_id
+        `
+        const binds = {car_id : car_id,user_id:user_id}
+        const result = await execute(sql,binds);
+        return result
+    } catch(error) {
+        console.log(error)
+    }
+}
 
-module.exports = { searchByCompany, searchByType , searchByName, test, addToCart , sendLocationDataByLocationId ,updateCustomerData, addComment, editComment };
+async function get_user_comment(car_id,user_id) {
+    try {
+        const sql = `
+            SELECT * FROM
+            COMMENTS
+            WHERE MODEL_COLOR_ID = :car_id AND CUSTOMER_ID = :user_id
+        `
+        const binds = {car_id : car_id,user_id:user_id}
+        const result = await execute(sql,binds);
+        return result
+    } catch(error) {
+        console.log(error)
+    }
+}
+
+async function get_all_comment(car_id,user_id) {
+    try {
+        const sql = `
+            SELECT * FROM COMMENTS C 
+            JOIN USERS U ON (C.CUSTOMER_ID = U.ID)
+            WHERE C.MODEL_COLOR_ID = :car_id
+            MINUS
+            (SELECT * FROM
+            COMMENTS CC
+            JOIN USERS UU ON (CC.CUSTOMER_ID = UU.ID)
+            WHERE CC.MODEL_COLOR_ID = :car_id AND CC.CUSTOMER_ID = :user_id)
+        `
+        const binds = {car_id : car_id,user_id:user_id}
+        const result = await execute(sql,binds);
+        return result
+    } catch(error) {
+        console.log(error)
+    }
+}
+
+async function get_average_rating(car_id) {
+    try {
+        const sql = `
+            SELECT NVL(AVG(RATING),0) AVERAGE
+            FROM RATING
+            WHERE MODEL_COLOR_ID = :car_id
+        `
+        const binds = {car_id : car_id}
+        const result = await execute(sql,binds);
+        return result
+    } catch(error) {
+        console.log(error)
+    }
+}
+
+async function is_eligible_to_review(car_id,user_id) {
+    try {
+        const sql = `
+            SELECT * 
+            FROM ORDERLIST O
+            JOIN CART CT ON (O.CART_ID = CT.CART_ID)
+            WHERE O.ORDER_STATE LIKE 'DELIVERED' AND CT.MODEL_COLOR_ID = :car_id AND CT.CUSTOMER_ID = :user_id
+        `
+        const binds = {car_id : car_id,user_id:user_id}
+        const result = await execute(sql,binds);
+        if(result.length > 0 ) {
+            return 1;
+        }
+        else {
+            return 0;
+        }
+    } catch(error) {
+        console.log(error)
+    }
+}
+
+async function is_rated_by_user(car_id,user_id) {
+    try{
+        const sql = `
+            SELECT * FROM
+            RATING 
+            WHERE MODEL_COLOR_ID = :car_id AND CUSTOMER_ID = :user_id
+        `
+        const binds = {car_id: car_id,user_id:user_id}
+        const result = await execute(sql,binds)
+        if(result.length > 0) {
+            return 1
+        }
+        else {
+            return 0
+        }
+    } catch(error) {
+        console.log(error)
+    }
+}
+
+async function addRating(model_color_id,user_id,rating) {
+    try{
+        const sql = `
+            BEGIN 
+                addRating(:model_color_id,:user_id,:rating);
+            END;
+        `
+        const binds = {model_color_id:model_color_id,user_id:user_id,rating:rating}
+        await execute(sql,binds)
+        return 0;
+    } catch(error) {
+        console.log(error)
+    }
+}
+
+async function updateRating(model_color_id,user_id,rating) {
+    try{
+        const sql = `
+            BEGIN 
+                updateRating(:model_color_id,:user_id,:rating);
+            END;
+        `
+        const binds = {model_color_id:model_color_id,user_id:user_id,rating:rating}
+        await execute(sql,binds)
+        return 0;
+    } catch(error) {
+        console.log(error)
+    }
+}
+
+
+module.exports = { searchByCompany, searchByType , searchByName, test, addToCart , sendLocationDataByLocationId ,updateCustomerData, addComment, editComment , get_user_rating , get_user_comment ,get_all_comment , get_average_rating ,is_eligible_to_review , is_rated_by_user , addRating , updateRating};
