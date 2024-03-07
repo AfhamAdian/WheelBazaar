@@ -28,7 +28,7 @@ BEGIN
 		 
 		INSERT INTO CARS( MODEL_COLOR_ID,MODEL_NAME,SEAT_CAP,ENGINE_CAP,COLOR,PRICE,LAUNCH_DATE,STOCK,WARRANTY,COMPANY_ID,CAR_IMAGE_URL,TYPE_ID,VOUCHER_NO)
 		VALUES ( id, name, seat, engine, car_color, car_price, TO_DATE(l_date, 'DD/MM/YYYY'), car_stock, car_warranty, comp_id, url1, typ_id,v_id1);
-		
+		//
 	
 	END IF;
 EXCEPTION
