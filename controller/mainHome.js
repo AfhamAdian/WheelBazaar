@@ -146,5 +146,38 @@ async function updateCustomerData(email,name,phone,division,city,id) {
     }
 }
 
+async function addComment ( model_color_id, user_id, comment_text )
+{
+    try{
+        const sql =`
+        BEGIN 
+            ADD_COMMENT( :model_color_id, :user_id , :comment_text );
+        END;
+        `;
 
-module.exports = { searchByCompany, searchByType , searchByName, test, addToCart , sendLocationDataByLocationId ,updateCustomerData };
+        const binds = { model_color_id, user_id, comment_text };
+        const result = await execute( sql, binds );
+        return result;
+    }catch(err){
+        console.log(err);
+    }
+
+}
+
+async function editComment(comment_id, comment_text) {
+    try {
+        const sql = `
+        BEGIN
+            edit_comment(:comment_id,:comment_text);
+        END;
+        `
+        const binds = {comment_id, comment_text};
+        const result = await execute( sql, binds );
+        return result;
+    }catch(err){
+        console.log(err);
+    }
+}
+
+
+module.exports = { searchByCompany, searchByType , searchByName, test, addToCart , sendLocationDataByLocationId ,updateCustomerData, addComment, editComment };

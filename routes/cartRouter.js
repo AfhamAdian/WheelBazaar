@@ -64,6 +64,7 @@ cartRouter
             }
         );
     })
+
 cartRouter
     .route('/checkout')
     .get(authorization,async(req,res)=>{
@@ -83,6 +84,7 @@ cartRouter
         }
         res.render('checkout',{authorized: "true",user_info:userDetails,cartProducts:cartInfo,showroom:showroom,total_price:total_price} );
     });
+    
 cartRouter
     .route('/myorders')
     .get(authorization,async(req,res)=>{

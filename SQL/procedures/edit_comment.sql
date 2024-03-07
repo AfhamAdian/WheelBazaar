@@ -1,0 +1,11 @@
+CREATE OR REPLACE PROCEDURE edit_comment( comment_id IN NUMBER, text IN VARCHAR2 )
+IS
+	dummy NUMBER;
+BEGIN 
+	UPDATE comments
+	SET COMMENT_TEXT = text
+	WHERE ID = comment_id;
+EXCEPTION 
+	WHEN OTHERS THEN 
+		DBMS_OUTPUT.PUT_LINE('ERROR');
+END;

@@ -127,6 +127,7 @@ companyHomeRouter
 
             const result = await updateStateWithId( state, id );
         })
+
 companyHomeRouter
         .route('/showrooms')
         .get(authorizationCompany,async(req,res)=> {
@@ -144,6 +145,7 @@ companyHomeRouter
             const showrooms = await filterShowrooms(division,city);
             res.json(showrooms);
         })
+        
 companyHomeRouter
         .route('/orders')
         .get(authorizationCompany,async(req,res)=>{

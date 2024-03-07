@@ -6,7 +6,7 @@ const { execute } = require('../DB/dbConnect.js');
 require('dotenv').config();
 
 const { authUser,sendUserData,sendUserDataByUserName, authCompany } = require('../controller/logIn.js');
-const { updatePassword } = require('../controller/updatePassWord.js');
+const { updatePassword } = require('../controller/updatePassword.js');
 const { authorization } = require('../middlewares/authorization.js');
 
 // Assuming __dirname is the 'route' directory

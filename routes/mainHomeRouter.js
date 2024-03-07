@@ -2,7 +2,7 @@ const express = require('express');
 const { execute } = require('../DB/dbConnect.js');
 const path = require('path');
 const { result } = require('lodash');
-const { searchByCompany, searchByType, searchByName, test , sendLocationDataByLocationId , updateCustomerData } = require('../controller/mainHome.js');
+const { searchByCompany, searchByType, searchByName, test , sendLocationDataByLocationId, addComment, editComment , updateCustomerData } = require('../controller/mainHome.js');
 const { addToCart } = require('../controller/mainHome.js');
 const { type } = require('os');
 const { authorization } = require('../middlewares/authorization.js');
@@ -119,6 +119,7 @@ mainHomeRouter
             const result = await searchByName(carName);
             res.json(result);
         })
+
     mainHomeRouter
         .route('/addtocart')
         .post(async(req,res)=> {
@@ -134,6 +135,7 @@ mainHomeRouter
             const ans = addToCart( model_color_id, user_id, status );
             res.json({message: "ok"})
         })
+
     mainHomeRouter
         .route('/cardetails')
         .get(async(req,res)=>{
@@ -158,6 +160,43 @@ mainHomeRouter
                 res.render('car_details',{authorized:authorized,user_info:user_info,product:product})
             }
         })
+
+    mainHomeRouter
+        .route('/cardetails/comment')
+        .post( authorization, async(req,res)=>{
+            try {
+                console.log(req.body);
+
+                const {email,password} = req.user;
+                const user_info = await sendUserData(email,password);
+
+                const user_id = user_info[0].ID;
+                const {model_color_id, comment_text} = req.body;
+
+                const result = await addComment(model_color_id, user_id, comment_text);
+                res.status(200).json({message: "comment added successfully"});
+
+            }catch(error) {
+                console.log(error);
+            }
+        });
+
+    mainHomeRouter
+        .route('/cardetails/editcomment')
+        .get( authorization, async(req,res)=>{
+            try {
+            
+                const comment_id = req.body.comment_id;
+                const comment_text = req.body.comment_text;
+
+                const result = await editComment(comment_id, comment_text);
+
+                res.status(200).json({message: "comment edited successfully"});
+            }catch(error) {
+                console.log(error);
+            }
+        });
+
     mainHomeRouter
         .route('/myinfo')
         .get(authorization,async(req,res)=> {
@@ -173,6 +212,7 @@ mainHomeRouter
             }
             
         })
+
     mainHomeRouter
         .route('/editInfo') 
         .get(authorization,async(req,res)=>{
@@ -187,6 +227,7 @@ mainHomeRouter
                 res.render('editCustomerInfo',{user_info:userDetails,authorized:"true",location:location});
             }
         })
+
     mainHomeRouter
         .route('/updateInfo')
         .post(async(req,res)=>{
