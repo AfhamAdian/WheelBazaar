@@ -2,12 +2,12 @@ const express = require('express');
 const cookieParser = require('cookie-parser');
 const path = require('path');
 const jwt = require('jsonwebtoken');
-const { execute } = require('../DB/dbConnect.js');
+const { execute } = require('../../DB/dbConnect.js');
 require('dotenv').config();
 
-const { authUser,sendUserData,sendUserDataByUserName, authCompany } = require('../controller/logIn.js');
-const { updatePassword } = require('../controller/updatePassword.js');
-const { authorization } = require('../middlewares/authorization.js');
+const { authUser,sendUserData,sendUserDataByUserName, authCompany } = require('../../controller/logIn.js');
+const { updatePassword } = require('../../controller/updatePassword.js');
+const { authorization } = require('../../middlewares/authorization.js');
 
 // Assuming __dirname is the 'route' directory
 const routeDirectory = __dirname;
