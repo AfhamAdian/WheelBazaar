@@ -25,18 +25,17 @@ oracledb.init();
 
 
 // Router and Page
-const mainHomeRouter = require('./routes/mainHomeRouter.js');
+const mainHomeRouter = require('./routes/customer/mainHomeRouter.js');
 app.use('/', mainHomeRouter );
 
-const homeRouter = require('./routes/homeRouter.js');
+const homeRouter = require('./routes/customer/homeRouter.js');
 app.use('/test',homeRouter);
 
-app.use('/login', require('./routes/logInRouter.js'));
-app.use('/signup', require('./routes/signUpRouter.js'));
-app.use('/logout', require('./routes/logOutRouter.js'));
-app.use('/cart', require('./routes/cartRouter.js'));
-app.use('/companyHome', require('./routes/companyHomeRouter.js'));
-
+app.use('/login', require('./routes/customer/logInRouter.js'));
+app.use('/signup', require('./routes/customer/signUpRouter.js'));
+app.use('/logout', require('./routes/customer/logOutRouter.js'));
+app.use('/cart', require('./routes/customer/cartRouter.js'));
+app.use('/companyHome', require('./routes/company/companyHomeRouter.js'));
 /// 404 Page Ridercting 
 app.use((req, res) => {
     // res.status(404).sendFile('./views/companyHomeGraph.ejs', { root: __dirname });

@@ -1,15 +1,15 @@
 const express = require('express');
-const { execute } = require('../DB/dbConnect.js');
+const { execute } = require('../../DB/dbConnect.js');
 const path = require('path');
 const { result } = require('lodash');
 const { searchByCompany, searchByType, searchByName, test , sendLocationDataByLocationId, addComment, editComment , updateCustomerData , get_user_rating ,get_user_comment ,get_all_comment ,get_average_rating , is_eligible_to_review , is_rated_by_user , addRating  , updateRating} = require('../controller/mainHome.js');
 const { addToCart } = require('../controller/mainHome.js');
 const { type } = require('os');
-const { authorization } = require('../middlewares/authorization.js');
-const decodeTokenFromCookies = require('../utils/decodeToken.js');
+const { authorization } = require('../../middlewares/authorization.js');
+const decodeTokenFromCookies = require('../../utils/decodeToken.js');
 
 
-const {sendUserData, sendUserDataByID,sendCustomerData } = require('../controller/logIn.js');
+const {sendUserData, sendUserDataByID,sendCustomerData } = require('../../controller/logIn.js');
 const { Console } = require('console');
 // Assuming __dirname is the 'route' directory
 const routeDirectory = __dirname;

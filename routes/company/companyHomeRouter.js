@@ -1,9 +1,9 @@
 const express = require('express');
 const path = require('path');
-const { authorizationCompany } = require('../middlewares/authorization.js');
-const { sendUserIdFromEmailPass,sendUserDataByIdGeneral } = require('../controller/logIn.js');
-const { updateStateWithId ,getShowrooms,getCarTypes , filterShowrooms , getOrderlistByCompanyId ,getAllCars } = require('../controller/company.js');
-const { execute } = require('../DB/dbConnect.js');
+const { authorizationCompany } = require('../../middlewares/authorization.js');
+const { sendUserIdFromEmailPass,sendUserDataByIdGeneral } = require('../../controller/logIn.js');
+const { updateStateWithId ,getShowrooms,getCarTypes , filterShowrooms , getOrderlistByCompanyId ,getAllCars } = require('../../controller/company.js');
+const { execute } = require('../../DB/dbConnect.js');
 
 // Assuming __dirname is the 'route' directory
 const routeDirectory = __dirname;
@@ -163,7 +163,8 @@ companyHomeRouter
         })
 
 
-
+companyHomeRouter.use('/voucher',require('./voucherRouter.js'));
+companyHomeRouter.use('/addProduct',require('./productRouter.js'));
 
 
 module.exports = companyHomeRouter;

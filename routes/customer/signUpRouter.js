@@ -1,7 +1,7 @@
 const express = require('express');
 const path = require('path');
 const oracledb = require('oracledb');
-const { execute } = require('../DB/dbConnect.js');
+const { execute } = require('../../DB/dbConnect.js');
 
 const signUpRouter = express.Router();
 
