@@ -1,7 +1,7 @@
 const express = require('express');
 const path = require('path');
 const { authorizationCompany } = require('../../middlewares/authorization.js');
-const { addVoucherForCarsFromCompany } = require('../../controller/voucher.js');
+const { addVoucherForCarsFromCompany } = require('../../controller/company/voucher.js');
 
 // Assuming __dirname is the 'route' directory
 const routeDirectory = __dirname;
@@ -38,4 +38,4 @@ voucherRouter
         }
     });
 
-module.exports = companyHomeRouter;
+module.exports = voucherRouter;

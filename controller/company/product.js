@@ -1,5 +1,5 @@
 const express = require('express');
-const { execute } = require('../DB/dbConnect.js');
+const { execute } = require('../../DB/dbConnect.js');
 const path = require('path');
 
 async function addCar( name, seat , engine, car_color, car_price ,l_date, car_stock, car_warranty, comp_id , url, typ_id , v_id )

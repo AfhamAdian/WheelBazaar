@@ -1,5 +1,5 @@
 const express = require('express');
-const { execute } = require('../DB/dbConnect.js');
+const { execute } = require('../../DB/dbConnect.js');
 const path = require('path');
 
 async function addVoucherForCarsFromCompany( name, discount, validity, company_id, car_id_arr )
