@@ -1,7 +1,7 @@
 const express = require('express');
 const { execute } = require('../DB/dbConnect.js');
 const path = require('path');
-const { use } = require('../routes/logInRouter.js');
+const { use } = require('../routes/customer/logInRouter.js');
 
 
 async function searchByCompany( companyName ) 

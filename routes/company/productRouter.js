@@ -1,11 +1,11 @@
 const express = require('express');
 const path = require('path');
 const { authorizationCompany } = require('../../middlewares/authorization.js');
-const { addCar } = require('../../controller/product.js');
+const { addCar } = require('../../controller/company/product.js');
 
 const ProductRouter = express.Router();
 
-voucherRouter
+ProductRouter
     .route('/')
     .post( authorizationCompany, async (req,res) =>
     {
@@ -25,4 +25,4 @@ voucherRouter
         }
     });
 
-module.exports = companyHomeRouter;
+module.exports = ProductRouter;
