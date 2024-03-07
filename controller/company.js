@@ -92,7 +92,7 @@ async function getOrderlistByCompanyId(id) {
         const result = await execute(sql,binds);
         return result;
     } catch(error) {
-        console.log(error)
+        console.log(error) 
     }
 }
 

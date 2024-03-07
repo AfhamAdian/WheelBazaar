@@ -123,7 +123,7 @@ companyHomeRouter
             const state = 'PROCESSING';
 
             const result = await updateStateWithId( state, id );
-        })
+        }) 
 
 companyHomeRouter
         .route('/showrooms')
