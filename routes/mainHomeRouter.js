@@ -197,6 +197,47 @@ mainHomeRouter
             }
         });
 
+     mainHomeRouter
+        .route('/cardetails/rate')
+        .post( authorization, async(req,res)=>{
+            try {
+                console.log(req.body);
+
+                const {email,password} = req.user;
+                const user_info = await sendUserData(email,password);
+                const user_id = user_info[0].ID;
+
+                const { model_color_id, rating } = req.body;
+
+                const result = await addRating(model_color_id, user_id, rating);
+                res.status(200).json({message: "product rated successfully"});
+
+            }catch(error) {
+                console.log(error);
+            }
+        });
+
+    mainHomeRouter
+        .route('/cardetails/updateRating')
+        .post( authorization, async(req,res)=>{
+            try {
+                console.log(req.body);
+
+                const {email,password} = req.user;
+                const user_info = await sendUserData(email,password);
+                const user_id = user_info[0].ID;
+
+                const { model_color_id, rating } = req.body;
+
+                const result = await updateRating(model_color_id, user_id, rating);
+                res.status(200).json({message: "raitng updated successfully"});
+
+            }catch(error) {
+                console.log(error);
+            }
+        });
+
+
     mainHomeRouter
         .route('/myinfo')
         .get(authorization,async(req,res)=> {

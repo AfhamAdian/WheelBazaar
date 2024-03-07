@@ -1,0 +1,11 @@
+CREATE OR REPLACE PROCEDURE updateRating ( model_id IN NUMBER, user_id IN NUMBER, rating_number IN NUMBER )
+IS 
+
+BEGIN 
+	UPDATE RATING 
+	SET rating  = rating_number
+	WHERE MODEL_COLOR_ID = model_id AND CUSTOMER_ID = user_id ;
+EXCEPTION
+	WHEN OTHERS THEN 
+		DBMS_OUTPUT.PUT_LINE('ERROR');
+END;

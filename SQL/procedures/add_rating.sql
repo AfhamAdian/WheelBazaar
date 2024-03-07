@@ -1,0 +1,10 @@
+CREATE OR REPLACE PROCEDURE addRating ( model_id IN NUMBER, user_id IN NUMBER, rating_number IN NUMBER )
+IS 
+
+BEGIN 
+	INSERT INTO rating( RATING, MODEL_COLOR_ID, CUSTOMER_ID)
+	VALUES( rating_number, model_id, user_id );
+EXCEPTION
+	WHEN OTHERS THEN 
+		DBMS_OUTPUT.PUT_LINE('ERROR');
+END;
