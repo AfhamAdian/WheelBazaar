@@ -41,7 +41,7 @@ async function getShowrooms() {
 
 async function getCarTypes() {
     try {
-        const ct_sql="SELECT TYPE_NAME,CAR_TYPE_URL FROM CARTYPE";
+        const ct_sql="SELECT TYPE_ID,TYPE_NAME,CAR_TYPE_URL FROM CARTYPE";
         car_types = await execute(ct_sql,{})
         return car_types;
     } catch(error) {
@@ -112,4 +112,50 @@ async function getAllCars(id) {
     }
 }
 
-module.exports = { updateStateWithId , getShowrooms ,getCarTypes , filterShowrooms ,getOrderlistByCompanyId , getAllCars };
+async function is_valid_new_car(company_id,model_name,color) {
+    try {
+        const sql = `
+            SELECT check_add_new_car(:company_id,:model_name,:color) CK
+            FROM DUAL
+        `
+        const binds = {company_id:company_id,model_name:model_name,color:color}
+        const result = await execute(sql,binds)
+        if(result[0].CK == 0) {
+            return 0;
+        }
+        return 1;
+    } catch(error) {
+        console.log(error)
+    }
+}
+
+async function add_new_car(model_name,color,car_type,seat_cap,engine_cap,price,stock,warranty,launch_date,car_image_url,id) {
+    try {
+        const sql = `
+            BEGIN
+                add_car(:model_name,:seat_cap,:engine_cap,:color,:price,:launch_date,:stock,:warranty,:id,:car_image_url,:car_type,-1);
+            END;
+        `
+
+        const binds = {
+            model_name:model_name,
+            seat_cap:seat_cap,
+            engine_cap:engine_cap,
+            color:color,
+            price:price,
+            launch_date:launch_date,
+            stock:stock,
+            warranty:warranty,
+            id:id,
+            car_image_url:car_image_url,
+            car_type:car_type
+        }
+
+        await execute(sql,binds)
+        return ;
+    } catch ( error) {
+        console.log(error)
+    }
+}
+
+module.exports = { updateStateWithId , getShowrooms ,getCarTypes , filterShowrooms ,getOrderlistByCompanyId , getAllCars , is_valid_new_car , add_new_car };

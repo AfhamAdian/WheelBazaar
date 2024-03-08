@@ -2,7 +2,7 @@ const express = require('express');
 const path = require('path');
 const { authorizationCompany } = require('../../middlewares/authorization.js');
 const { sendUserIdFromEmailPass,sendUserDataByIdGeneral } = require('../../controller/logIn.js');
-const { updateStateWithId ,getShowrooms,getCarTypes , filterShowrooms , getOrderlistByCompanyId ,getAllCars } = require('../../controller/company.js');
+const { updateStateWithId ,getShowrooms,getCarTypes , filterShowrooms , getOrderlistByCompanyId ,getAllCars , is_valid_new_car , add_new_car } = require('../../controller/company.js');
 const { execute } = require('../../DB/dbConnect.js');
 
 // Assuming __dirname is the 'route' directory
@@ -160,6 +160,37 @@ companyHomeRouter
             company_info = await sendUserDataByIdGeneral( user_id[0].ID );
             const cars = await getAllCars(company_info[0].ID);
             res.render('companyCars',{company_info: company_info, authorized: "true", user:"company", cars:cars })
+        })
+companyHomeRouter
+        .route('/addCar')
+        .get(authorizationCompany,async(req,res)=>{
+            user_id = await sendUserIdFromEmailPass(req.user.email,req.user.password)
+            company_info = await sendUserDataByIdGeneral( user_id[0].ID );
+            car_types = await getCarTypes();
+            res.render('addCar',{company_info:company_info,authorized:"true",user:"company",car_types:car_types})
+        })
+        .post(authorizationCompany,async(req,res)=>{
+            user_id = await sendUserIdFromEmailPass(req.user.email,req.user.password)
+            const {
+                model_name,
+                color,
+                car_type,
+                seat_cap,
+                engine_cap,
+                price,
+                stock,
+                warranty,
+                launch_date,
+                car_image_url
+            } = req.body
+            const check = await is_valid_new_car(user_id[0].ID,model_name,color)
+            if(check == 0) {
+                await add_new_car(model_name,color,car_type,seat_cap,engine_cap,price,stock,warranty,launch_date,car_image_url,user_id[0].ID)
+                res.json({message: "ok"})
+            }
+            else {
+                res.json({message : "duplicate"})
+            }
         })
 
 
