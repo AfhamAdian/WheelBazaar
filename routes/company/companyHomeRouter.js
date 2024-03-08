@@ -3,7 +3,9 @@ const path = require('path');
 const { authorizationCompany } = require('../../middlewares/authorization.js');
 const { sendUserIdFromEmailPass,sendUserDataByIdGeneral } = require('../../controller/logIn.js');
 const { updateStateWithId ,getShowrooms,getCarTypes , filterShowrooms , getOrderlistByCompanyId ,getAllCars , is_valid_new_car , add_new_car ,get_orderlist_by_showroom , get_car_models_by_company , add_voucher, add_voucher2 } = require('../../controller/company.js');
+const { monthlySalesGraphGenerator,monthlySalesPieGenerator,salesInMonth, salesInYear } = require('../../controller/company/report.js');
 const { execute } = require('../../DB/dbConnect.js');
+const { DATE } = require('oracledb');
 
 // Assuming __dirname is the 'route' directory
 const routeDirectory = __dirname;
@@ -38,11 +40,81 @@ companyHomeRouter
                 company_info = await sendUserDataByIdGeneral( company_id );
                 console.log( company_info );
 
-                res.render('companyHome',{company_info: company_info, authorized: "true", user:"company", user_info: user_info});
+                //here i will send the necessary data in the frontend to render a graph
+                
+                const monthlySales = await monthlySalesGraphGenerator( company_id );
+                console.log( monthlySales );
+                console.log( 'sales ' + monthlySales[0].ORDERDATE );
+
+                let sales = [];
+                let days = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30];
+
+                for( let i = 0; i < days.length; i++ )
+                {
+                    let flag = 0;
+                    for ( let j = 0; j < monthlySales.length; j++ )
+                    {
+                        let date =  new Date( monthlySales[j].ORDERDATE );
+                        //console.log( date );
+                        if( monthlySales[j].ORDERDATE == days[i] )
+                        {
+                            sales.push( monthlySales[j].COUNTCAR );
+                            flag = 1;
+                            break;
+                        }
+                    }
+                    if( false == flag )
+                    {
+                        sales.push( 0 );
+                    }
+                }
+                
+                console.log( sales );
+                console.log( days );
+
+                ////////////// PIE chart /////////////////////
+                
+                const monthlySalesPie = await monthlySalesPieGenerator( company_id );
+                console.log( monthlySalesPie );
+                console.log( 'sales ' + monthlySalesPie[0].TYPE );
+                
+                let carType = [];
+                let carCount = [];
+
+                for( let i = 0; i < monthlySalesPie.length; i++ )
+                {
+                    carType.push( monthlySalesPie[i].TYPE );
+                    carCount.push( monthlySalesPie[i].COUNTCAR );
+                }
+                
+                var backgroundColors = carType.map(function() {
+                    return getRandomColor();
+                });
+
+                console.log( carType );
+                console.log( carCount );
+                console.log( backgroundColors );
+
+                const salesInAMonth = await salesInMonth( company_id );
+
+                const salesInAYear = await salesInYear( company_id );
+
+                res.render('companyHome',{company_info: company_info, authorized: "true", user:"company", user_info: user_info, sales: sales, days: days, carType: carType, carCount: carCount, backgroundColors: backgroundColors, salesInAMonth: salesInAMonth, salesInAYear: salesInAYear });
             }catch(err){
                 console.log(err);
             }
         });
+
+        function getRandomColor() {
+            var letters = '0123456789ABCDEF';
+            var color = '#';
+            for (var i = 0; i < 6; i++) {
+                color += letters[Math.floor(Math.random() * 16)];
+            }
+            return color;
+        }
+
+
 
 companyHomeRouter
         .route('/ship')
