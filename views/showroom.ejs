@@ -96,7 +96,7 @@
                         <p class="card-text">Country: <%=showrooms[i].COUNTRY%></p>
                         <p class="card-text">Division: <%=showrooms[i].DIVISION%></p>
                         <p class="card-text">City: <%=showrooms[i].CITY%></p>
-                        <button class="see-order-btn">See Orders</button>
+                        <button class="see-order-btn" data-info="<%=showrooms[i].SHOWROOM_ID %>" onclick="see_orders(this)">See Orders</button>
                     </div>
                 </div>
             <%}%>
@@ -218,6 +218,12 @@
 
         function remove() {
             window.location.href = "/companyHome/showrooms"
+        }
+    </script>
+    <script>
+        function see_orders(button) {
+            var showroom_id = button.dataset.info
+            window.location.href = '/companyHome/showroom/orders?id=' + showroom_id
         }
     </script>
   </body>
