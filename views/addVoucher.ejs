@@ -1,0 +1,117 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Add voucher</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@v1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+    <link href="https://getbootstrap.com/docs/5.3/assets/css/docs.css" rel="stylesheet">
+    <script src="/script/script.js"></script>
+    <link rel="stylesheet" href="/CSS/style.css">
+    <style>
+        .add-voucher-btn {
+            display: block;
+            width: 100%;
+            padding: 10px;
+            background-color: #e44d26;
+            color: #fff;
+            text-align: center;
+            text-decoration: none;
+            font-size: 18px;
+            margin-top: 20px;
+            border: none;
+            cursor: pointer;
+        }
+    </style>
+  </head>
+  <body>
+    <%-include('layouts/company_navbar.ejs', {user_info:company_info})%>
+    <main>
+        <div class="container">
+            <h2 class="mb-4">Add voucher</h2>
+            <form onsubmit="addvoucher(event)">
+                <div class="mb-3">
+                    <label for="voucher_name" class="form-label">Voucher Name:</label>
+                    <input type="text" class="form-control" id="voucher_name" name="voucher_name" required placeholder="Enter voucher name">
+                </div>
+        
+                <div class="mb-3">
+                    <label for="discount" class="form-label">Discount percentage:</label>
+                    <input type="number" class="form-control" id="discount" name="discount" max="100" required placeholder="Enter discount percentage">
+                </div>
+
+                <div class="mb-3">
+                    <label for="validity_date" class="form-label">Validity Date:</label>
+                    <input type="date" class="form-control" id="validity_date" name="validity_date" required>
+                </div>
+
+                <div class="form-group">
+                    <label>Select Car Models:</label>
+                    <% carModels.forEach(model => { %>
+                        <div class="custom-control custom-checkbox">
+                            <input type="checkbox" class="custom-control-input" id="<%= model.MODEL_NAME %>" name="selectedModels" value="<%= model.MODEL_NAME %>">
+                            <label class="custom-control-label" for="<%= model.MODEL_NAME %>"><%= model.MODEL_NAME %></label>
+                        </div>
+                    <% }); %>
+                </div>
+        
+                <button type="submit" class="add-voucher-btn">Add voucher</button>
+            </form>
+        </div>
+    </main>
+    <%-include('layouts/footer.ejs')%>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script>
+        function addvoucher(event) {
+            event.preventDefault()
+            var checkboxes = document.getElementsByName('selectedModels');
+            var atLeastOneChecked = false;
+            var selectedModel = null;
+            var voucher_name = document.getElementById('voucher_name').value
+            var discount = document.getElementById('discount').value
+            var validity_date = document.getElementById('validity_date').value
+    
+            for (var i = 0; i < checkboxes.length; i++) {
+                if (checkboxes[i].checked) {
+                    atLeastOneChecked = true;
+                }
+            }
+    
+            if (!atLeastOneChecked) {
+                alert('Please select at least one car model.');
+                return ;
+            }
+
+            // add voucher
+            fetch('/companyHome/addVoucher',{
+                method : 'POST',
+                headers : {
+                    'Content-type' : 'application/json'
+                },
+                body : JSON.stringify({voucher_name,discount,validity_date})
+            })
+
+            for (var i = 0; i < checkboxes.length; i++) {
+                if (checkboxes[i].checked) {
+                    var selectedModel = checkboxes[i].nextElementSibling.textContent.trim()
+                    fetch('/companyHome/addVoucher2', {
+                        method: 'POST',
+                        headers: {
+                            'Content-type' : 'application/json'
+                        },
+                        body : JSON.stringify({selectedModel})
+                    }).then(res=>res.json())
+                    .then(res=> {
+                        
+                    })
+                }
+            }
+
+            window.location.href = '/companyHome'
+        }
+    </script>
+  </body>
+</html>

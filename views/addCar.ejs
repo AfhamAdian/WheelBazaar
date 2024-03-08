@@ -1,0 +1,142 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Add new car</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@v1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+    <link href="https://getbootstrap.com/docs/5.3/assets/css/docs.css" rel="stylesheet">
+    <script src="/script/script.js"></script>
+    <link rel="stylesheet" href="/CSS/style.css">
+    <style>
+        label {
+            display: block;
+            margin-bottom: 5px;
+        }
+        .add-car-btn {
+            display: block;
+            width: 100%;
+            padding: 10px;
+            background-color: #e44d26;
+            color: #fff;
+            text-align: center;
+            text-decoration: none;
+            font-size: 18px;
+            margin-top: 20px;
+            border: none;
+            cursor: pointer;
+        }
+    </style>
+  </head>
+  <body>
+    <%-include('layouts/company_navbar.ejs', {user_info:company_info})%>
+    <main>
+        <div class="container">
+
+            <h2 class="mb-4">Add New Car</h2>
+            <form onsubmit="addcar(event)">
+                <div class="mb-3">
+                    <label for="model_name" class="form-label">Model Name:</label>
+                    <input type="text" class="form-control" id="model_name" name="model_name" required placeholder="Enter model name">
+                </div>
+        
+                <div class="mb-3">
+                    <label for="color" class="form-label">Color:</label>
+                    <input type="text" class="form-control" id="color" name="color" required placeholder="Enter color">
+                </div>
+        
+                <div class="mb-3">
+                    <label for="car_type" class="form-label">Car Type:</label>
+                    <select class="form-select" id="car_type" name="car_type" required>
+                        <script>
+                            var selectType= document.getElementById("car_type");
+                            var placeholderOption = document.createElement("option");
+                            placeholderOption.value = 'Select Car Type';
+                            placeholderOption.text = 'Select Car Type';
+                            placeholderOption.disabled = true;
+                            placeholderOption.selected = true;
+                            selectType.appendChild(placeholderOption);
+                    </script> 
+                    <% car_types.forEach(carType => { %>
+                        <option value="<%= carType.TYPE_ID %>"><%= carType.TYPE_NAME %></option>
+                    <% }); %>
+                    </select>
+                </div>
+        
+                <div class="mb-3">
+                    <label for="seating_capacity" class="form-label">Seating Capacity:</label>
+                    <input type="number" class="form-control" id="seating_capacity" name="seating_capacity" required placeholder="Enter seating capacity">
+                </div>
+        
+                <div class="mb-3">
+                    <label for="engine_capacity" class="form-label">Engine Capacity:</label>
+                    <input type="text" class="form-control" id="engine_capacity" name="engine_capacity" required placeholder="Enter engine capacity"> 
+                </div>
+        
+                <div class="mb-3">
+                    <label for="price" class="form-label">Price:</label>
+                    <input type="number" class="form-control" id="price" name="price" required placeholder="Enter price in BDT">
+                </div>
+        
+                <div class="mb-3">
+                    <label for="stock" class="form-label">Stock:</label>
+                    <input type="number" class="form-control" id="stock" name="stock" required placeholder="Enter stock">
+                </div>
+        
+                <div class="mb-3">
+                    <label for="warranty" class="form-label">Warranty:</label>
+                    <input type="text" class="form-control" id="warranty" name="warranty" required placeholder="Enter warranty in years">
+                </div>
+
+                <div class="mb-3">
+                    <label for="launch_date" class="form-label">Launch Date:</label>
+                    <input type="date" class="form-control" id="launch_date" name="launch_date" required>
+                </div>
+        
+                <div class="mb-3">
+                    <label for="description" class="form-label">Ca image URL:</label>
+                    <input class="form-control" id="description" name="description" required placeholder="Enter a image url for the car">
+                </div>
+        
+                <button type="submit" class="add-car-btn">Add Car</button>
+            </form>
+        </div>
+    </main>
+    <%-include('layouts/footer.ejs')%>
+    <script>
+        function addcar(event) {
+            event.preventDefault();
+            const model_name = document.getElementById('model_name').value
+            const color = document.getElementById('color').value
+            const car_type = document.getElementById('car_type').value
+            if(car_type == "Select Car Type") {
+                alert("Select Car Type")
+                return;
+            }
+            const seat_cap = document.getElementById('seating_capacity').value
+            const engine_cap = document.getElementById('engine_capacity').value
+            const price = document.getElementById('price').value
+            const stock = document.getElementById('stock').value
+            const warranty = document.getElementById('warranty').value
+            const car_image_url = document.getElementById('description').value
+            const launch_date = document.getElementById('launch_date').value
+            fetch('/companyHome/addCar',{
+                method : 'POST',
+                headers: {
+                    'Content-type' : 'application/json'
+                },
+                body: JSON.stringify({model_name,color,car_type,seat_cap,engine_cap,price,stock,warranty,launch_date,car_image_url})
+            }).then(res=>res.json())
+            .then(res=>{
+                if(res.message == "duplicate") {
+                    alert("Car exists already with the same model name and color")
+                }
+                else {
+                    window.location.href = '/companyHome'
+                }
+            })
+        }
+    </script>
+  </body>
+</html>

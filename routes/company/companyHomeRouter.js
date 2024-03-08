@@ -2,7 +2,7 @@ const express = require('express');
 const path = require('path');
 const { authorizationCompany } = require('../../middlewares/authorization.js');
 const { sendUserIdFromEmailPass,sendUserDataByIdGeneral } = require('../../controller/logIn.js');
-const { updateStateWithId ,getShowrooms,getCarTypes , filterShowrooms , getOrderlistByCompanyId ,getAllCars } = require('../../controller/company.js');
+const { updateStateWithId ,getShowrooms,getCarTypes , filterShowrooms , getOrderlistByCompanyId ,getAllCars , is_valid_new_car , add_new_car ,get_orderlist_by_showroom , get_car_models_by_company , add_voucher, add_voucher2 } = require('../../controller/company.js');
 const { monthlySalesGraphGenerator,monthlySalesPieGenerator,salesInMonth, salesInYear } = require('../../controller/company/report.js');
 const { execute } = require('../../DB/dbConnect.js');
 const { DATE } = require('oracledb');
@@ -233,10 +233,72 @@ companyHomeRouter
             const cars = await getAllCars(company_info[0].ID);
             res.render('companyCars',{company_info: company_info, authorized: "true", user:"company", cars:cars })
         })
+companyHomeRouter
+        .route('/addCar')
+        .get(authorizationCompany,async(req,res)=>{
+            user_id = await sendUserIdFromEmailPass(req.user.email,req.user.password)
+            company_info = await sendUserDataByIdGeneral( user_id[0].ID );
+            car_types = await getCarTypes();
+            res.render('addCar',{company_info:company_info,authorized:"true",user:"company",car_types:car_types})
+        })
+        .post(authorizationCompany,async(req,res)=>{
+            user_id = await sendUserIdFromEmailPass(req.user.email,req.user.password)
+            const {
+                model_name,
+                color,
+                car_type,
+                seat_cap,
+                engine_cap,
+                price,
+                stock,
+                warranty,
+                launch_date,
+                car_image_url
+            } = req.body
+            const check = await is_valid_new_car(user_id[0].ID,model_name,color)
+            if(check == 0) {
+                await add_new_car(model_name,color,car_type,seat_cap,engine_cap,price,stock,warranty,launch_date,car_image_url,user_id[0].ID)
+                res.json({message: "ok"})
+            }
+            else {
+                res.json({message : "duplicate"})
+            }
+        })
+companyHomeRouter
+        .route('/addVoucher')
+        .get(authorizationCompany,async(req,res)=> {
+            user_id = await sendUserIdFromEmailPass(req.user.email,req.user.password)
+            company_info = await sendUserDataByIdGeneral( user_id[0].ID );
+            const carModels = await get_car_models_by_company(user_id[0].ID)
+            res.render('addVoucher',{company_info:company_info,authorized:"true",user:"company",carModels:carModels})
+        })
+        .post(authorizationCompany,async(req,res)=> {
+            const {
+                voucher_name,
+                discount,
+                validity_date
+            } = req.body
+            await add_voucher(voucher_name,discount,validity_date)
+            res.json("ok")
+        })
+companyHomeRouter
+        .route('/addVoucher2')
+        .post(authorizationCompany,async(req,res)=>{
+            var selectedModel = req.body.selectedModel
+            await add_voucher2(selectedModel)
+            res.json("ok")
+        })
+companyHomeRouter
+        .route('/showroom/orders')
+        .get(authorizationCompany,async(req,res)=> {
+            var id = req.query.id
+            user_id = await sendUserIdFromEmailPass(req.user.email,req.user.password)
+            company_info = await sendUserDataByIdGeneral( user_id[0].ID );
+            const orderlist = await get_orderlist_by_showroom(user_id[0].ID,id)
+            res.render('companyOrder',{company_info:company_info,authorized:"true",user:"company",orderlist:orderlist})
+        })
 
 
 companyHomeRouter.use('/voucher',require('./voucherRouter.js'));
 companyHomeRouter.use('/addProduct',require('./productRouter.js'));
-
-
 module.exports = companyHomeRouter;
