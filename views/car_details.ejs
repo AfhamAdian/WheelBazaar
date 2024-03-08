@@ -108,6 +108,48 @@
     .rating .star.active {
       color: #ffcc00;
     }
+
+    .review-container {
+      display: flex;
+      max-width: 100%;
+      margin: 10px;
+    }
+    .review-text {
+  border: 2px solid #101010;
+
+  border-radius: 10px;
+  margin-bottom: 10px;
+  /* Add more specific styles to override default styles */
+  
+  box-sizing: border-box;
+  width: 100%;
+}
+
+
+    .edit-button {
+      background-color: #999b9be1;
+      color: #0b0a0a;
+      border: none;
+      padding: 5px;
+      border-radius: 6px;
+      cursor: pointer;
+      width: 15px; /* Set a fixed width for the button */
+      box-sizing: content-box; /* Ensure the fixed width includes padding */
+      height: 20px;
+      margin-left: 5px;
+    }
+
+    .edit-icon {
+      margin-right: 5px;
+    }
+    .submit-edit {
+      padding: 5px;
+      border-radius: 6px;
+      cursor: pointer; 
+      box-sizing: content-box; /* Ensure the fixed width includes padding */
+      height: 25px;
+      margin-left: 5px;
+    }
     </style>
 
     <script>
@@ -143,7 +185,7 @@
             <p class="car-type"><a href="<%=product[0].CAR_TYPE_URL%>"><%=product[0].TYPE_NAME%></a></p>
             <p class="car-company"><a href="<%=product[0].COMPANY_URL%>"><%=product[0].NAME%></a></p>
             <% if(average_rating[0].AVERAGE > 0) {%>
-              <p class="">Rating: <%= average_rating %> </p>
+              <p class="">Rating: <%= average_rating[0].AVERAGE %> </p>
             <% } %>
             <% if(average_rating[0].AVERAGE == 0.00) {%>
               <p class="">Rating: no rating </p>
@@ -172,7 +214,12 @@
         <div class="container write-review">
           <% if(eligible == 1) { %>
             <div class="container mt-5">
-              <h3>Rate the Product:</h3>
+              <% if(rated == 1) { %>
+                <h3>Your rating for this car :</h3>
+              <% } %>
+              <% if(rated == 0) { %>
+                <h3>Rate this car :</h3>
+              <% } %>
               <div class="rating" onclick="setRating(event)">
                 <span class="star" data-value="1">&#9733;</span>
                 <span class="star" data-value="2">&#9733;</span>
@@ -194,9 +241,11 @@
           <% if(user_comment.length != 0) { %>
             <label for="">My reviews: </label><br>
             <% for(let i=0 ;i < user_comment.length ; i++) { %>
-              <div class="card">
-                <div class="card-body">
-                  <p class="card-text"> <%= user_comment[i].COMMENT_TEXT %></p>
+              <div class="review-container">
+                <textarea class="review-text" name="user_review" id="reviewTextArea<%= i + 1 %>" maxlength="1000" readonly> <%= user_comment[i].COMMENT_TEXT %></textarea>
+                <div class="edit-buttons">
+                  <button class="edit-button" onclick="toggleEditMode(this,'reviewTextArea<%= i + 1 %>','s_button<%= i+1 %>')"><span class="edit-icon">✎</span></button>
+                  <button class="btn btn-primary submit-edit" id="s_button<%= i +1 %>" onclick="submitEdit('reviewTextArea<%= i + 1 %>','<%= user_comment[i].COMMENT_ID %>')" style="display: none;">Submit</button>
                 </div>
               </div>
             <% } %>
@@ -298,7 +347,7 @@
       }).then(res=>res.json())
       .then(res=>{
         if(res.message = "product rated successfully") {
-          '/cardetails?car_id=' + model_color_id + '&user_id=' + user_id
+          window.location.href = '/cardetails?car_id=' + model_color_id + '&user_id=' + user_id
         }
       })
     }
@@ -318,6 +367,43 @@
     }
 
   }
+</script>
+<script>
+    function toggleEditMode(button,reviewId,submit_button_id) {
+    const reviewTextArea = document.getElementById(reviewId);
+    const submitEditButton = document.getElementById(submit_button_id);
+    reviewTextArea.readOnly = false;
+    button.style.display = "none";
+    submitEditButton.style.display =   "block";
+  }
+
+  function adjustTextareaHeightOnLoad() {
+    var texts = document.getElementsByName('user_review')
+    for(var i= 0 ;i<texts.length;i++) {
+      texts[i].rows = Math.ceil(texts[i].scrollHeight/20)
+    }
+  }
+
+  adjustTextareaHeightOnLoad();
+
+  function submitEdit(id,comment_id) {
+    var model_color_id = '<%= product[0].MODEL_COLOR_ID %>'
+    var text = document.getElementById(id).value
+    var user_id = '<%= user_info[0].ID %>'
+    fetch('/cardetails/editcomment',{
+      method : 'POST',
+      headers : {
+        'Content-type' : 'application/json'
+      },
+      body : JSON.stringify({comment_id,text})
+    }).then(res=>res.json())
+    .then(res=> {
+      if(res.message == "comment edited successfully") {
+        window.location.href = '/cardetails?car_id=' + model_color_id + '&user_id=' + user_id
+      }
+    })
+  }
+
 </script>
 </body>
 </html>

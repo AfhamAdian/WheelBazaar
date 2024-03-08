@@ -172,7 +172,7 @@ async function editComment(comment_id, comment_text) {
             edit_comment(:comment_id,:comment_text);
         END;
         `
-        const binds = {comment_id, comment_text};
+        const binds = {comment_id:comment_id, comment_text:comment_text};
         const result = await execute( sql, binds );
         return result;
     }catch(err){

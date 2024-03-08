@@ -194,13 +194,15 @@ mainHomeRouter
 
     mainHomeRouter
         .route('/cardetails/editcomment')
-        .get( authorization, async(req,res)=>{
+        .post( authorization, async(req,res)=>{
             try {
             
                 const comment_id = req.body.comment_id;
-                const comment_text = req.body.comment_text;
+                const text = req.body.text;
+                console.log(text)
+                console.log(comment_id)
 
-                const result = await editComment(comment_id, comment_text);
+                const result = await editComment(comment_id, text);
 
                 res.status(200).json({message: "comment edited successfully"});
             }catch(error) {
