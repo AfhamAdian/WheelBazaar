@@ -9,12 +9,213 @@
     <link href="https://getbootstrap.com/docs/5.3/assets/css/docs.css" rel="stylesheet">
     <script src="/script/script.js"></script>
     <link rel="stylesheet" href="/CSS/style.css">
+
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        /* Style for the box */
+        .box {
+            width: 400px;
+            height: 200px;
+            background-color: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 50px auto;
+            text-align: center;
+            font-family: 'Poppins', sans-serif;
+            font-size: 32px; /* Double the font size */
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease-in-out;
+        }
+
+        .box:hover {
+            transform: scale(1.05);
+        }
+
+        /* Style for the larger font */
+        .larger-font {
+            font-size: 48px; /* Double the font size */
+        }
+
+        /* Style for the headline */
+        .headline {
+            margin-bottom: 20px; /* Increase margin for better spacing */
+        }
+
+        .float-container {
+          padding: 20px;
+        }
+        
+        .float-child {
+            width: 50%;
+            float: left;
+            padding: 20px;
+        } 
+
+        .float-container {
+          display: flex;
+          flex-wrap: wrap;
+        }
+
+        .box {
+          flex: 1 0 50%; /* Grow and shrink equally, base width 50% */
+          max-width: 50%; /* Max width 50% */
+        }
+    </style>
+
+    <style>
+      #earningsChart {
+          max-width: 500px;
+          max-height: 300px;
+          border: 2px dashed #000;
+          padding: 10px;
+          background-color: #f8f9fa;
+          margin: 20px 0;
+      }
+  </style>
+
+  <style>
+    #myPieChart {
+        max-width: 500px;
+        max-height: 300px;
+        padding: 10px;
+        margin: 20px 0;
+    }
+  </style>
+
   </head>
   <body>
     <%-include('layouts/company_navbar.ejs', {user_info:company_info})%>
     <main>
 
+      <div style="clear: both;"></div>
+
+      <div class="float-container">
+          <div id="float-child" class="box"  >
+            <div class="headline" style="color: #2b3035;">Total saleses this month:</div>
+            <div id="totalSales" class="larger-font" style="color: #e4b144;"><%= salesInAMonth %></div>
+          </div>
+  
+          <div id="float-child" class="box" >
+            <div class="headline" style="color: #2b3035;">Total sales this Year:</div>
+            <div id="totalSales" class="larger-font" style="color: #e4b144;"><%= salesInAYear %></div>
+          </div>
+      </div>
+
+     <div style="clear: both;"></div>
+     
+     <div class="float-container">
+        <div class="float-child">
+          <h3>Monthly Sales</h3>
+          <canvas id="earningsChart"></canvas>
+        </div>
+
+        <div class="float-child">
+          <h3>Sales split</h3>
+          <canvas id="myPieChart"></canvas>
+        </div>
+    </div>
+
+
     </main>
     <%-include('layouts/footer.ejs')%>
+
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    
+    <script>
+        // Get the canvas element
+        var ctx = document.getElementById('earningsChart').getContext('2d');
+
+        // Define the data for the chart
+        var data = {
+            labels: JSON.parse('<%= JSON.stringify(days) %>'),
+            datasets: [{
+                label: 'Earnings',
+                lineTension: 0.3,
+                backgroundColor: "rgba(2,117,216,0.2)",
+                borderColor: "rgba(2,117,216,1)",
+                pointRadius: 5,
+                pointBackgroundColor: "rgba(2,117,216,1)",
+                pointBorderColor: "rgba(255,255,255,0.8)",
+                pointHoverRadius: 5,
+                pointHoverBackgroundColor: "rgba(2,117,216,1)",
+                pointHitRadius: 50,
+                pointBorderWidth: 2,
+                data: JSON.parse('<%= JSON.stringify(sales) %>'),
+                backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                borderColor: 'rgba(75, 192, 192, 1)',
+                borderWidth: 2
+            }]
+        };
+
+        // Create the chart
+        var earningsChart = new Chart(ctx, {
+            type: 'line',
+            data: data,
+            options: {
+                scales: {
+                  xAxes: [{
+                    time: {
+                      unit: 'date'
+                    },
+                    gridLines: {
+                      display: false
+                    },
+                    ticks: {
+                      maxTicksLimit: 7
+                    }
+                  }],
+                  yAxes: [{
+                    ticks: {
+                      min: 0,
+                      max: 40000,
+                      maxTicksLimit: 5
+                    },
+                    gridLines: {
+                      display: false
+                    }
+                  }],
+                },
+                legend: {
+                  display: false
+                }
+              }
+        });
+    </script>
+
+    <script>
+
+      var colorArray =  JSON.stringify('<%= backgroundColors %>').split(",");
+      colorArray = colorArray.map(color => color.replace(/"/g, ''));
+      console.log(colorArray); 
+
+      var countArray = JSON.stringify('<%= carCount %>').split(",");
+      countArray = countArray.map(color => color.replace(/"/g, ''));
+      console.log(countArray);
+
+      var typeArray = JSON.stringify('<%= carType %>').split(",");
+      typeArray = typeArray.map(color => color.replace(/"/g, ''));
+      console.log(typeArray);
+
+      var ctx = document.getElementById("myPieChart");
+      var myPieChart = new Chart(ctx, {
+        type: 'pie',
+        data: {
+          labels: typeArray,
+          datasets: [{
+            data: countArray,
+            backgroundColor: [ '#D63484', '#5DADE2','#FF5733', '#FFC300', '#DAF7A6', '#337357', '#FFC0CB', '#58D68D', '#AF7AC5'],
+          }],
+        },
+      });
+
+    </script>
+  
+
   </body>
 </html>
+

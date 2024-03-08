@@ -43,6 +43,7 @@ async function searchByType ( typeName )
             FROM CARTYPE CCCC
             WHERE LOWER(REPLACE(CCCC.TYPE_NAME,' ','')) = LOWER(REPLACE( :typeName ,' ','' ))
         )
+
         `;
 
         const binds = { typeName }
