@@ -190,7 +190,13 @@
             <% if(average_rating[0].AVERAGE == 0.00) {%>
               <p class="">Rating: no rating </p>
             <% } %>
-            <p class="car-price">BDT <%=product[0].PRICE%></p>
+            <% if(product[0].DISCOUNT == 0 ) { %>
+              <p class="car-price">BDT <%=product[0].PRICE%></p>
+            <% } %>
+            <% if(product[0].DISCOUNT != 0 ) { %>
+              <p class="car-price" style="text-decoration: line-through;color: red;">BDT <%=product[0].PRICE%></p>
+              <p class="car-price">BDT <%= product[0].PRICE - (product[0].DISCOUNT * product[0].PRICE / 100) %></p>
+            <% } %>
             <div class="car-details">
                 <p><strong>Color:</strong> <%=product[0].COLOR%></p>
                 <%if(product[0].STOCK > 0 ) {%>
@@ -254,12 +260,9 @@
         <div class="container all-review">
           <% if(all_comment.length != 0) { %>
             <label for="">Other Reviews: </label><br>
-            <% for(let i=0 ; i < all_comment.length; i++) { %>
-              <div class="card">
-                <div class="card-body">
-                  <h5 class="card-title"> <%= all_comment[i].NAME %></h5>
-                  <p class="card-text"> <%= all_comment[i].COMMENT_TEXT %></p>
-                </div>
+            <% for(let i=0 ;i < all_comment.length ; i++) { %>
+              <div class="review-container">
+                <textarea class="review-text" name="all_review" maxlength="1000" readonly> <%= all_comment[i].COMMENT_TEXT %></textarea>
               </div>
             <% } %>
           <% } %>
@@ -385,6 +388,15 @@
   }
 
   adjustTextareaHeightOnLoad();
+
+  function adjustTextareaHeightOnLoad2() {
+    var texts = document.getElementsByName('all_review')
+    for(var i= 0 ;i<texts.length;i++) {
+      texts[i].rows = Math.ceil(texts[i].scrollHeight/20)
+    }
+  }
+
+  adjustTextareaHeightOnLoad2();
 
   function submitEdit(id,comment_id) {
     var model_color_id = '<%= product[0].MODEL_COLOR_ID %>'

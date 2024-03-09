@@ -42,6 +42,7 @@ body {
   display: none;
   flex-direction: column;
   min-width: 10rem;
+  width: max-content;
   padding: 0.5rem 0;
   margin: 0.125rem 0 0;
   font-size: 1rem;
@@ -52,6 +53,8 @@ body {
   background-clip: padding-box;
   border: 1px solid rgba(0, 0, 0, 0.125);
   border-radius: 0.25rem;
+  max-height: 600px;
+  overflow-y: scroll;
 }
 
 .dropdown-menu :hover{
@@ -70,14 +73,14 @@ body {
   right: -250px;
   width: 250px;
   height: 100%;
-  background-color: #0669fc;
+  background-color: #b6bac0;
   transition: right 0.3s ease;
   padding-top: 20px;
   z-index: 2;
 }
 
 #sidebar .btn-close {
-  color: rgb(254, 252, 252);
+  color: rgb(14, 12, 12);
   position: absolute;
   top: 10px;
   right: 10px;
@@ -112,21 +115,21 @@ padding: 0;
 
 .sidebar-buttons li {
 padding: 15px;
-color: white;
+color: rgb(8, 7, 7);
 cursor: pointer;
 transition: background-color 0.3s;
 }
 
 .sidebar-buttons a {
 padding: 15px;
-color: white;
+color: rgb(6, 5, 5);
 cursor: pointer;
 transition: background-color 0.3s;
 text-decoration: none;
 }
 
 .sidebar-buttons li:hover {
-background-color: #0056b3;
+background-color: #cfe4ee;
 }
 
 .content {

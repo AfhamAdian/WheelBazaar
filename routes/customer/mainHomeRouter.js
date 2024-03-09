@@ -2,7 +2,7 @@ const express = require('express');
 const { execute } = require('../../DB/dbConnect.js');
 const path = require('path');
 const { result } = require('lodash');
-const { searchByCompany, searchByType, searchByName, test , sendLocationDataByLocationId, addComment, editComment , updateCustomerData , get_user_rating ,get_user_comment ,get_all_comment ,get_average_rating , is_eligible_to_review , is_rated_by_user , addRating  , updateRating} = require('../../controller/mainHome.js');
+const { searchByCompany, searchByType, searchByName, test , sendLocationDataByLocationId, addComment, editComment , updateCustomerData , get_user_rating ,get_user_comment ,get_all_comment ,get_average_rating , is_eligible_to_review , is_rated_by_user , addRating  , updateRating , get_trending_cars} = require('../../controller/mainHome.js');
 const { addToCart } = require('../../controller/mainHome.js');
 const { type } = require('os');
 const { authorization } = require('../../middlewares/authorization.js');
@@ -36,15 +36,7 @@ mainHomeRouter
 
         console.log("login status " + isLoggedIn);
 
-        const t_sql=`
-        SELECT * FROM CARS C
-        JOIN COMPANY CO ON C.COMPANY_ID = CO.ID
-        JOIN CARTYPE CA ON C.TYPE_ID = CA.TYPE_ID
-        JOIN USERS U ON C.COMPANY_ID = U.ID
-        ORDER BY DBMS_RANDOM.VALUE
-        FETCH FIRST 5 ROWS ONLY
-        `
-        const trending = await execute(t_sql,{});
+        const trending = await get_trending_cars();
 
 
         if( isLoggedIn == 'false' || isLoggedIn == undefined )
@@ -146,6 +138,7 @@ mainHomeRouter
             JOIN COMPANY CO ON C.COMPANY_ID = CO.ID
             JOIN CARTYPE CA ON C.TYPE_ID = CA.TYPE_ID
             JOIN USERS U ON C.COMPANY_ID = U.ID
+            JOIN VOUCHER V ON (NVL(C.VOUCHER_NO,0) = V.VOUCHER_NO)
             WHERE C.MODEL_COLOR_ID = :car_id`
             const binds = {car_id};
             const product = await execute(sql,binds);
