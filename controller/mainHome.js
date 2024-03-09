@@ -85,16 +85,26 @@ async function searchByName(carName)
 async function addToCart( model_color_id, user_id , status)
 {
     try{
-        
-        const sql =`
-        BEGIN
-            DBMS_OUTPUT.PUT_LINE ( addToCart(:model_color_id,:user_id,:status) );
-        END;
-        `;
-
-        const binds = { model_color_id, user_id, status };
-        const result = await execute( sql, binds );
-        return result;
+        const sqlll = `
+            SELECT COUNT(*) CNT
+            FROM CART
+            WHERE MODEL_COLOR_ID = :model_color_id AND CUSTOMER_ID = :user_id AND CONFIRM_STATUS LIKE 'NOT_CONFIRMED'
+        `
+        const bindsss = {model_color_id:model_color_id,user_id:user_id}
+        const cnt = await execute(sqlll,bindsss)
+        if(cnt[0].CNT == 0) {
+            const sql =`
+            BEGIN
+                DBMS_OUTPUT.PUT_LINE ( addToCart(:model_color_id,:user_id,:status) );
+            END;
+            `;
+    
+            const binds = { model_color_id, user_id, status };
+            const result = await execute( sql, binds );
+            return result;
+        } else {
+            return 0;
+        }
     }catch(err){
         console.log("\nadd to cart failed\n" );
         console.log(err);
