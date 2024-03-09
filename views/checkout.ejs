@@ -220,7 +220,7 @@
                 }
             }
             const cardNum = document.getElementById('cardNumber').value
-            if(cardNum == "" || cardNum.length != 16) {
+            if((cardNum == "" || cardNum.length != 16 ) && payment_method != 'COD') {
                 alert('Please input a valid card number')
                 return;
             }
