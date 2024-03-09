@@ -306,6 +306,14 @@ companyHomeRouter
             res.render('vouchers',{company_info:company_info,authorized:"true",user:"company",vouchers:vouchers})
         })
 
+companyHomeRouter
+        .route('/myinfo')
+        .get(authorizationCompany,async(req,res)=> {
+            user_id = await sendUserIdFromEmailPass(req.user.email,req.user.password)
+            company_info = await sendUserDataByIdGeneral( user_id[0].ID );
+            res.render('companyInfo',{user_info:company_info,authorized:"true",location:[{LOCATION_ID:0,COUNTRY:"",DIVISION:"",CITY:""}],company_info:company_info,user:"company"});
+        })
+
 
 companyHomeRouter.use('/voucher',require('./voucherRouter.js'));
 companyHomeRouter.use('/addProduct',require('./productRouter.js'));
