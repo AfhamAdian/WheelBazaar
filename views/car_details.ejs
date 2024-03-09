@@ -110,6 +110,12 @@
     }
 
     .review-container {
+      display: block;
+      max-width: 100%;
+      margin: 10px;
+    }
+
+    .review-container-2 {
       display: flex;
       max-width: 100%;
       margin: 10px;
@@ -247,7 +253,7 @@
           <% if(user_comment.length != 0) { %>
             <label for="">My reviews: </label><br>
             <% for(let i=0 ;i < user_comment.length ; i++) { %>
-              <div class="review-container">
+              <div class="review-container-2">
                 <textarea class="review-text" name="user_review" id="reviewTextArea<%= i + 1 %>" maxlength="1000" readonly> <%= user_comment[i].COMMENT_TEXT %></textarea>
                 <div class="edit-buttons">
                   <button class="edit-button" onclick="toggleEditMode(this,'reviewTextArea<%= i + 1 %>','s_button<%= i+1 %>')"><span class="edit-icon">✎</span></button>
@@ -259,9 +265,11 @@
         </div>
         <div class="container all-review">
           <% if(all_comment.length != 0) { %>
-            <label for="">Other Reviews: </label><br>
+            <label for="">Reviews: </label><br>
             <% for(let i=0 ;i < all_comment.length ; i++) { %>
               <div class="review-container">
+                <label for=""> Review by <span style="font-weight: 600;"><%=all_comment[i].NAME%></span> :</label>
+                <br>
                 <textarea class="review-text" name="all_review" maxlength="1000" readonly> <%= all_comment[i].COMMENT_TEXT %></textarea>
               </div>
             <% } %>
