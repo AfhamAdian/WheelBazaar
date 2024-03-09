@@ -54,7 +54,15 @@
       }
 
       function generateProdecuts(data,id) {
+        var t = document.getElementById('trending')
+        t.style.display = 'none'
         document.getElementById('searchRes').innerHTML="";
+        document.getElementById('searchRes').innerHTML+=`
+            <div class="col-md-8">
+            <h5 style="margin-left: 5%;font-style: italic;">Showing <span style="color: red;" id="lengthhh">${data.length}</span> result(s)...</h5>
+            <br>
+        </div>
+        `
         for(let i=0;i<data.length;i++) {
         document.getElementById('searchRes').innerHTML+=`
         <div class="card mb-3">
