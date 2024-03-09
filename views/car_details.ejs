@@ -276,9 +276,6 @@
           const model_color_id = '<%= product[0].MODEL_COLOR_ID %>'
           const comment_text = document.getElementById('reviewInput').value
           const user_id = '<%= user_info[0].ID %>'
-          alert(model_color_id)
-          alert(user_id)
-          alert(comment_text)
           fetch('/cardetails/comment',{
             method: 'POST',
             headers: {
@@ -288,7 +285,6 @@
           }).then(res=>res.json())
           .then(res=>{
             if(res.message == "comment added successfully") {
-              alert("ok")
               window.location.href = '/cardetails?car_id=' + model_color_id + '&user_id=' + user_id
             }
           })
@@ -364,7 +360,7 @@
       }).then(res=>res.json())
       .then(res=>{
         if(res.message = "raitng updated successfully") {
-          '/cardetails?car_id=' + model_color_id + '&user_id=' + user_id
+          
         }
       })
     }
