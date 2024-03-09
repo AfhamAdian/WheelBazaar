@@ -170,12 +170,12 @@
         }).then(res=>res.json())
         .then(res=>{
           if(res.message == "ok") {
-            alert( "Added to cart" );
+            alert( "Added to wishlist" );
           }
         })
         } 
         if(user_id == 0) {
-          alert("Please log in to add to cart");
+          alert("Please log in to add to wishlist");
           window.location.href = '/login'
         }
       }
