@@ -47,7 +47,7 @@
         .then(res=>{
           if(res.message == "ok") {
             
-            alert( "Added to cart" );
+            alert( "Added to wishlist" );
           }
         })
         
@@ -118,7 +118,7 @@
               console.log( "added to cart" );
             }
             else {
-              alert( "Please login to add to cart" );
+              alert( "Please login to add to wishlist" );
               window.location.href = '/login';
             }
           });
