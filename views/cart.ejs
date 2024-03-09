@@ -49,11 +49,11 @@
                             <p class="card-text"><%= cartProducts[i].NAME %></p>
                             <p class="card-text"><%= cartProducts[i].TYPE_NAME %></p>
                             <p class="card-text">Color: <%= cartProducts[i].COLOR %></p>
-                            <p class="card-text" id="price_<%= i %>">Price: <%= cartProducts[i].PRICE * cnt %></p>
+                            <p class="card-text" id="price_<%= i %>">Price: <%= (cartProducts[i].PRICE - cartProducts[i].DISCOUNT * cartProducts[i].PRICE /100)  * cnt %></p>
                             <div class="btn-group">
-                              <button type="button" class="btn btn-secondary" id="count-" onclick="decrementCount('<%=i%>',-1,'<%=cartProducts[i].CART_ID%>','<%=cartProducts[i].PRICE%>')">-</button>
+                              <button type="button" class="btn btn-secondary" id="count-" onclick="decrementCount('<%=i%>',-1,'<%=cartProducts[i].CART_ID%>','<%=(cartProducts[i].PRICE - cartProducts[i].DISCOUNT * cartProducts[i].PRICE /100)%>')">-</button>
                               <span id="count_<%= i %>" class="btn btn-light" id="count"><%=cnt%></span>
-                              <button type="button" class="btn btn-secondary" id="count+" onclick="incrementCount('<%=i%>',1,'<%=cartProducts[i].CART_ID%>','<%=cartProducts[i].STOCK%>','<%=cartProducts[i].PRICE%>')">+</button>
+                              <button type="button" class="btn btn-secondary" id="count+" onclick="incrementCount('<%=i%>',1,'<%=cartProducts[i].CART_ID%>','<%=cartProducts[i].STOCK%>','<%=(cartProducts[i].PRICE - cartProducts[i].DISCOUNT * cartProducts[i].PRICE /100)%>')">+</button>
                             </div>
                           </div>
                         </div>
@@ -96,7 +96,7 @@
       }
       else {
         var newCount = currentCount + increment;
-        var newPrice = price + parseInt(or_price,10);
+        var newPrice = price + parseFloat(or_price);
         countElement.textContent = newCount;
         priceElement.textContent = 'Price: ' + (newPrice);
         fetch('/cart/increment',{

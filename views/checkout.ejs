@@ -115,7 +115,7 @@
                 <div class="form-group">
                     <label for="showroom" >Select Showroom:</label>
                     <select class="form-control" id="showroom" name="showroom" required>
-                        <option value="" disabled selected>Select Showroom</option>
+                        <option value="Select Showroom" disabled selected>Select Showroom</option>
                         <% for (var i = 0; i < showroom.length; i++) { %>
                             <option value="<%= showroom[i].SHOWROOM_ID %>"><%= showroom[i].SHOWROOM_NAME %></option>
                         <% } %>
@@ -124,7 +124,7 @@
                 <div class="form-group">
                     <label for="paymentMethod">Select Payment Method:</label>
                     <select class="form-control" id="paymentMethod" name="paymentMethod" required>
-                        <option value="" disabled selected>Select Payment Method</option>
+                        <option value="Select Method" disabled selected>Select Payment Method</option>
                         <option value="COD">Cash on Delivery</option>
                         <option value="OP">Online Payment</option>
                     </select>
@@ -138,7 +138,7 @@
                     <div class="form-group">
                         <label for="paymentType">Payment Type:</label>
                         <select class="form-control" id="paymentType" name="paymentType" required>
-                            <option value="" disabled selected>Select Payment Type</option>
+                            <option value="Select type" disabled selected>Select Payment Type</option>
                             <option value="fullPayment">Full Payment</option>
                             <option value="partialPayment">Partial Payment</option>
                         </select>
@@ -150,7 +150,7 @@
                     </div>
                 </div>
         
-                <button type="submit" class="btn btn-primary btn-block" style="background-color: green;" onclick="order()">Place order</button>
+                <button type="submit" class="btn btn-primary btn-block" style="background-color: green;" onclick="order(event)">Place order</button>
             </form>
         </div>
     </main>
@@ -181,11 +181,20 @@
         });
     </script>
     <script>
-        function order() {
+        function order(event) {
+            event.preventDefault()
             const order_state = 'PROCESSING';
             const voucher_no = null;
             const showroom_id = document.getElementById('showroom').value;
+            if(showroom_id == 'Select Showroom') {
+                alert('Please Select Showroom')
+                return;
+            }
             const payment_method = document.getElementById('paymentMethod').value;
+            if(payment_method == 'Select Method') {
+                alert('Please select payment method')
+                return;
+            }
             let payment_status,paid_amount;
             if(payment_method == 'COD') {
                 paid_amount = 0;
@@ -193,14 +202,27 @@
             }
             if(payment_method == 'OP') {
                 var payment_type = document.getElementById('paymentType').value;
+                if(payment_type == 'Select type') {
+                    alert('Please select payment type')
+                    return;
+                }
                 if(payment_type == 'fullPayment') {
                     paid_amount = '<%=total_price%>';
                     payment_status = 'PAID'
                 }
                 if(payment_type == 'partialPayment') {
                     paid_amount = document.getElementById('partialAmount').value;
+                    if(paid_amount == "" || paid_amount == 0) {
+                        alert('Please input your pay amount')
+                        return;
+                    }
                     payment_status = 'NOT_PAID'
                 }
+            }
+            const cardNum = document.getElementById('cardNumber').value
+            if(cardNum == "" || cardNum.length != 16) {
+                alert('Please input a valid card number')
+                return;
             }
             fetch('/cart/order',{
                 method: 'POST',

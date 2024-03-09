@@ -24,8 +24,13 @@
                 Cars
             </a>
           </li>
+          <li>
+            <a class="nav-link" href="/companyHome/vouchers" role="button">
+                Vouchers
+            </a>
+          </li>
         </ul>
-        <form class="d-flex" role="search" id="search" onsubmit="fetchResultsByName(event,'<%=user_info[0].ID%>')">
+        <form class="d-flex" role="search" id="search" onsubmit="fetchResultsByName2(event,'<%=user_info[0].ID%>')">
           <input class="form-control me-2" type="search" placeholder="Search cars" aria-label="Search" id="searchBar" name="searchBar" required="true">
           <button class="btn btn-outline-warning me-2"  type="submit" id="searchButton">Search</button>
         </form>
@@ -39,8 +44,8 @@
             <button type="button" class="btn-close" onclick="toggleSidebar()" aria-label="Close"></button>
             <!-- Add sidebar content here -->
             <div class="user-info">
-              <h4><%=user_info[0].NAME%></h4>
-              <p>User ID: <%=user_info[0].ID%></p>
+              <h4 style="color: rgb(13, 13, 8);"><%=user_info[0].NAME%></h4>
+              <p style="color: rgb(13, 13, 8);">User ID: <%=user_info[0].ID%></p>
             </div>
           
             <!-- Sidebar Buttons -->

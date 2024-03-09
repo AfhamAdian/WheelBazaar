@@ -44,7 +44,6 @@
             padding: 10px; 
             box-shadow: 0 14px 28px rgba(0,0,0,0.25),
                                 0 10px 10px rgba(0,0,0,0.22);
-            max-height: 300px;
         }
         .filter-btn {
             color: green;
@@ -78,9 +77,6 @@
             flex: 1;
             margin-right: 20px;
         }
-        .custom-img {
-            max-height: 300px;
-        }
     </style>
   </head>
   <body>
@@ -92,11 +88,6 @@
                     <div class="col-md-8">
                         <h5 style="margin-left: 10%;font-style: italic;">Showing <span style="color: red;" id="lengthhh"><%=orderlist.length%></span> result(s)...</h5>
                     </div>
-                    <div class="col-md-4">
-                        <button type="button" class="btn btn-outline-success filter-btn float-end" data-bs-toggle="modal" data-bs-target="#exampleModal">
-                            Filter
-                        </button>
-                    </div>
                 </div>
             </div>
         </div>
@@ -106,8 +97,8 @@
                 <% for (let i = 0; i < orderlist.length; i++) { %>
                     <div class="card cart-item">
                         <div class="row no-gutters">
-                        <div class="col-md-4 custom-img">
-                            <img src="<%= orderlist[i].CAR_IMAGE_URL %>" alt="<%= orderlist[i].name %>" style="max-width: 70%;margin-left: 8%;" class="card-img">
+                        <div class="col-md-4">
+                            <img src="<%= orderlist[i].CAR_IMAGE_URL %>" alt="<%= orderlist[i].name %>" class="card-img">
                         </div>
                         <div class="col-md-4">
                             <div class="card-body">

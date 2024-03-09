@@ -26,6 +26,7 @@
             font-size: 32px; /* Double the font size */
             box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
             transition: transform 0.3s ease-in-out;
+            padding: 5px;
         }
 
         .box:hover {
@@ -47,7 +48,7 @@
         }
         
         .float-child {
-            width: 50%;
+            width: calc(50% - 10px);
             float: left;
             padding: 20px;
         } 
@@ -88,17 +89,25 @@
     <%-include('layouts/company_navbar.ejs', {user_info:company_info})%>
     <main>
 
+      <div class="container" id="searchRes">
+
+      </div>
+
       <div style="clear: both;"></div>
 
       <div class="float-container">
-          <div id="float-child" class="box"  >
+          <div id="float-child" class="box box-left"  >
             <div class="headline" style="color: #2b3035;">Total saleses this month:</div>
-            <div id="totalSales" class="larger-font" style="color: #e4b144;"><%= salesInAMonth %></div>
+            <% if(salesInAMonth.length != 0) { %>
+              <div id="totalSales" class="larger-font" style="color: #e4b144;">BDT <%= salesInAMonth %></div>
+            <% } %>
           </div>
   
-          <div id="float-child" class="box" >
+          <div id="float-child" class="box box-right" >
             <div class="headline" style="color: #2b3035;">Total sales this Year:</div>
-            <div id="totalSales" class="larger-font" style="color: #e4b144;"><%= salesInAYear %></div>
+            <% if(salesInAYear.length != 0) { %>
+              <div id="totalSales" class="larger-font" style="color: #e4b144;">BDT <%= salesInAYear %></div>
+            <% } %>
           </div>
       </div>
 

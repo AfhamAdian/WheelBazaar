@@ -15,11 +15,13 @@ async function searchByCompany( companyName )
             JOIN COMPANY CP ON ( C.COMPANY_ID = CP.ID )
             JOIN USERS U ON ( U.ID = CP.ID )
             JOIN CARTYPE CT ON (C.TYPE_ID = CT.TYPE_ID)
+            JOIN VOUCHER V ON (NVL(C.VOUCHER_NO,0) = V.VOUCHER_NO)
             WHERE LOWER(REPLACE(U.NAME,' ','')) = LOWER( REPLACE(:companyName, ' ','' ) )
         `;
 
         const binds = { companyName }
         const result = await execute( sql , binds );
+        console.log(result)
         return result;
 
     }catch(err){
@@ -37,6 +39,7 @@ async function searchByType ( typeName )
         FROM CARS C
         JOIN USERS U ON (U.ID = C.COMPANY_ID)
         JOIN CARTYPE CT ON (C.TYPE_ID = CT.TYPE_ID)
+        JOIN VOUCHER V ON (NVL(C.VOUCHER_NO,0) = V.VOUCHER_NO)
         WHERE C.TYPE_ID = 
         (
             SELECT CCCC.TYPE_ID
@@ -66,6 +69,7 @@ async function searchByName(carName)
         FROM CARS C
         JOIN USERS U ON (U.ID = C.COMPANY_ID)
         JOIN CARTYPE CT ON (C.TYPE_ID = CT.TYPE_ID)
+        JOIN VOUCHER V ON (NVL(C.VOUCHER_NO,0) = V.VOUCHER_NO)
         WHERE LOWER(REPLACE(MODEL_NAME, ' ', '' )) LIKE LOWER(REPLACE( ${editedCarName} , ' ', '' ))
         `;
         
@@ -317,5 +321,52 @@ async function updateRating(model_color_id,user_id,rating) {
     }
 }
 
+async function get_trending_cars() {
+    try {
+        const sql = `
+        SELECT D1.MODEL_COLOR_ID, COUNT( DISTINCT D2.MODEL_COLOR_ID )+1 as RANK
+        FROM ( 
+            SELECT C1.MODEL_COLOR_ID, car_sales_count(C1.MODEL_COLOR_ID) as CARSALES
+            FROM
+            ORDERLIST O1
+            JOIN CART CA1 ON (O1.CART_ID = CA1.CART_ID ) 
+            JOIN CARS C1 ON ( C1.MODEL_COLOR_ID = CA1.MODEL_COLOR_ID ) 
+            GROUP BY C1.MODEL_COLOR_ID
+        ) D1
+        LEFT OUTER JOIN 
+        (	
+            SELECT C1.MODEL_COLOR_ID, car_sales_count(C1.MODEL_COLOR_ID) as CARSALES
+            FROM
+            ORDERLIST O1
+            JOIN CART CA1 ON (O1.CART_ID = CA1.CART_ID ) 
+            JOIN CARS C1 ON ( C1.MODEL_COLOR_ID = CA1.MODEL_COLOR_ID ) 
+            GROUP BY C1.MODEL_COLOR_ID
+        ) D2
+        ON ( D1.CARSALES < D2.CARSALES )
+        GROUP BY D1.MODEL_COLOR_ID
+        ORDER BY RANK
+        `
+        const result = await execute(sql,{})
+        let trending = []
 
-module.exports = { searchByCompany, searchByType , searchByName, test, addToCart , sendLocationDataByLocationId ,updateCustomerData, addComment, editComment , get_user_rating , get_user_comment ,get_all_comment , get_average_rating ,is_eligible_to_review , is_rated_by_user , addRating , updateRating};
+        for(var i=0 ; i< result.length && i<5 ;i++) {
+            const sql2 = `
+                SELECT * FROM 
+                CARS C JOIN USERS U ON (C.COMPANY_ID = U.ID)
+                JOIN CARTYPE CT ON (C.TYPE_ID = CT.TYPE_ID)
+                WHERE MODEL_COLOR_ID = :id
+            `
+            const binds = {id:result[i].MODEL_COLOR_ID}
+            const car = await execute(sql2,binds)
+            trending.push(car[0])
+        }
+
+        return trending
+
+    } catch(error) {
+        console.log(error)
+    }
+}
+
+
+module.exports = { searchByCompany, searchByType , searchByName, test, addToCart , sendLocationDataByLocationId ,updateCustomerData, addComment, editComment , get_user_rating , get_user_comment ,get_all_comment , get_average_rating ,is_eligible_to_review , is_rated_by_user , addRating , updateRating , get_trending_cars};

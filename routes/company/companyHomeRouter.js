@@ -2,7 +2,7 @@ const express = require('express');
 const path = require('path');
 const { authorizationCompany } = require('../../middlewares/authorization.js');
 const { sendUserIdFromEmailPass,sendUserDataByIdGeneral } = require('../../controller/logIn.js');
-const { updateStateWithId ,getShowrooms,getCarTypes , filterShowrooms , getOrderlistByCompanyId ,getAllCars , is_valid_new_car , add_new_car ,get_orderlist_by_showroom , get_car_models_by_company , add_voucher, add_voucher2 } = require('../../controller/company.js');
+const { updateStateWithId ,getShowrooms,getCarTypes , filterShowrooms , getOrderlistByCompanyId ,getAllCars , is_valid_new_car , add_new_car ,get_orderlist_by_showroom , get_car_models_by_company , add_voucher, add_voucher2 , get_vouchers } = require('../../controller/company.js');
 const { monthlySalesGraphGenerator,monthlySalesPieGenerator,salesInMonth, salesInYear } = require('../../controller/company/report.js');
 const { execute } = require('../../DB/dbConnect.js');
 const { DATE } = require('oracledb');
@@ -295,7 +295,15 @@ companyHomeRouter
             user_id = await sendUserIdFromEmailPass(req.user.email,req.user.password)
             company_info = await sendUserDataByIdGeneral( user_id[0].ID );
             const orderlist = await get_orderlist_by_showroom(user_id[0].ID,id)
-            res.render('companyOrder',{company_info:company_info,authorized:"true",user:"company",orderlist:orderlist})
+            res.render('showroomOrder',{company_info:company_info,authorized:"true",user:"company",orderlist:orderlist})
+        })
+companyHomeRouter
+        .route('/vouchers')
+        .get(authorizationCompany,async(req,res)=> {
+            user_id = await sendUserIdFromEmailPass(req.user.email,req.user.password)
+            company_info = await sendUserDataByIdGeneral( user_id[0].ID );
+            const vouchers = await get_vouchers(user_id[0].ID)
+            res.render('vouchers',{company_info:company_info,authorized:"true",user:"company",vouchers:vouchers})
         })
 
 

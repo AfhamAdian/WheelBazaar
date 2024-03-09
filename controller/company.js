@@ -30,6 +30,7 @@ async function getShowrooms() {
                 SELECT * 
                 FROM SHOWROOM S
                 JOIN LOCATIONS L ON (S.LOCATION_ID = L.LOCATION_ID)
+                ORDER BY S.SHOWROOM_ID
             `
             const result = await execute(sql,{});
             return result;
@@ -245,4 +246,20 @@ async function add_voucher2(selectedModel) {
     }
 }
 
-module.exports = { updateStateWithId , getShowrooms ,getCarTypes , filterShowrooms ,getOrderlistByCompanyId , getAllCars , is_valid_new_car , add_new_car , get_orderlist_by_showroom , get_car_models_by_company , add_voucher ,add_voucher2 };
+async function get_vouchers(id) {
+    try {
+        const sql = `
+            SELECT * FROM 
+            CARS C 
+            JOIN VOUCHER V ON (C.VOUCHER_NO = V.VOUCHER_NO)
+            WHERE C.COMPANY_ID = :id AND C.VOUCHER_NO IS NOT NULL AND V.ADD_TYPE LIKE 'CO'
+        `
+        const binds = {id:id}
+        const result = await execute(sql,binds)
+        return result
+    } catch(error) {
+        console.log(error)
+    }
+}
+
+module.exports = { updateStateWithId , getShowrooms ,getCarTypes , filterShowrooms ,getOrderlistByCompanyId , getAllCars , is_valid_new_car , add_new_car , get_orderlist_by_showroom , get_car_models_by_company , add_voucher ,add_voucher2 , get_vouchers };

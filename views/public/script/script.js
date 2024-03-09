@@ -16,6 +16,23 @@
         })
         }
 
+        function fetchResultsByName2(event,id) {
+          event.preventDefault();
+          const name = document.getElementById('searchBar').value;
+          console.log(name);
+          fetch('/searchByCarName',{
+          method: 'POST',
+          headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({name})
+          })
+          .then(res=>res.json())
+          .then(data=>{
+            generateProdecuts2(data,id);
+          })
+          }
+
       function addToCart(button,id) {
         var model_color_id = button.dataset.info;
         var user_id = id;
@@ -60,7 +77,11 @@
           </div>
           <div class="col-md-4">
             <div class="card-body">
-              <p class="card-text">Price: ${data[i].PRICE}</p>
+            <p class="card-text">
+            ${data[i].DISCOUNT != 0 ? `<span class="price" style="text-decoration: line-through;color:red;">Price: ${data[i].PRICE}</span>
+             <span class="discount">Price: ${data[i].PRICE - (data[i].DISCOUNT * data[i].PRICE / 100)}</span>` :
+            `<span class="price">Price: ${data[i].PRICE}</span>`}
+            </p>
               <p class="card-text">
               Stock: <span style="color: ${data[i].STOCK !== 0 ? '#00cc00' : '#ff0000'}; font-weight: bold; font-style: italic;">
                   ${data[i].STOCK !== 0 ? '<strong><em>In stock</em></strong>' : '<strong><em>Out of stock</em></strong>'}
@@ -76,6 +97,10 @@
 </div>
     `
         }
+
+
+        
+
         var add_to_cart_buttons = document.getElementsByName('add_to_cart_button');
 
         for(var i = 0;i<add_to_cart_buttons.length;i++) {
@@ -91,6 +116,40 @@
           });
         }
         }
+
+
+        function generateProdecuts2(data,id) {
+          document.getElementById('searchRes').innerHTML="";
+          for(let i=0;i<data.length;i++) {
+          document.getElementById('searchRes').innerHTML+=`
+          <div class="card mb-3">
+      <div class="row no-gutters">
+          <div class="col-md-4">
+              <a href="/cardetails?car_id=${data[i].MODEL_COLOR_ID}&user_id=${id}">
+                  <img src="${data[i].CAR_IMAGE_URL}" class="card-img" style="height: 100%;" alt="...">
+              </a>
+          </div>
+            <div class="col-md-4">
+                <div class="card-body">
+                    <a class="card-title" href="/cardetails?car_id=${data[i].MODEL_COLOR_ID}&user_id=${id}">${data[i].MODEL_NAME}</a>
+                    <br>
+                    <a class="card-text" style="font-weight: 100; font-size:20px;" href="${data[i].CAR_TYPE_URL}">${data[i].TYPE_NAME}</a>
+                    <br>
+                    <p class="card-text">Color: ${data[i].COLOR}</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+              <div class="card-body">
+                <p class="card-text">Price: ${data[i].PRICE}</p>
+                <p class="card-text">Stock: ${data[i].STOCK}</p>
+                <p class="card-text">Warranty: ${data[i].WARRANTY} years</p>
+              </div>
+            </div>
+      </div>
+  </div>
+      `
+          }
+          }
 
         function fetchResultsBrand(button,id) {
         // Access the text content of the clicked button
