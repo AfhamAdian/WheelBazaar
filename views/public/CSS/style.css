@@ -73,7 +73,7 @@ body {
   right: -250px;
   width: 250px;
   height: 100%;
-  background-color: #b6bac0;
+  background-color:#2b3035;
   transition: right 0.3s ease;
   padding-top: 20px;
   z-index: 2;
@@ -105,39 +105,46 @@ color: white;
 }
 
 .user-info h3 {
+color:  #e4b144;
 margin-bottom: 10px;
+text-decoration-color: #e4b144;
 }
 
 .sidebar-buttons {
+
 list-style: none;
 padding: 0;
 }
 
 .sidebar-buttons li {
 padding: 15px;
-color: rgb(8, 7, 7);
+color: #e4b144;
 cursor: pointer;
 transition: background-color 0.3s;
 }
 
 .sidebar-buttons a {
 padding: 15px;
-color: rgb(6, 5, 5);
+color: #e4b144;
 cursor: pointer;
 transition: background-color 0.3s;
 text-decoration: none;
 }
 
 .sidebar-buttons li:hover {
+  color:  #e4b144;
+
 background-color: #cfe4ee;
 }
 
 .content {
+color:  #e4b144;
 margin-left: 250px;
 padding: 15px;
 }
 
 #sidebar .bi {
+ color:  #e4b144;
 vertical-align: middle;
 margin-right: 5px;
 }
