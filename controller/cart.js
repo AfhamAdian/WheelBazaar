@@ -7,13 +7,13 @@ async function getCartInfo( user_id )
 {
     try{
         const sql =`
-        SELECT *
-        FROM CART cart
-        JOIN CARS cars ON ( cart.MODEL_COLOR_ID = cars.MODEL_COLOR_ID )
-        JOIN USERS com ON (cars.COMPANY_ID = com.ID)
-        JOIN CARTYPE ct ON (cars.TYPE_ID = ct.TYPE_ID)
-        JOIN VOUCHER V ON (V.VOUCHER_NO = NVL(cars.VOUCHER_NO,0))
-		WHERE cart.CUSTOMER_ID = :user_id AND cart.CONFIRM_STATUS = 'NOT_CONFIRMED'
+            SELECT *
+            FROM CART cart
+            JOIN CARS cars ON ( cart.MODEL_COLOR_ID = cars.MODEL_COLOR_ID )
+            JOIN USERS com ON (cars.COMPANY_ID = com.ID)
+            JOIN CARTYPE ct ON (cars.TYPE_ID = ct.TYPE_ID)
+            JOIN VOUCHER V ON (V.VOUCHER_NO = NVL(cars.VOUCHER_NO,0))
+            WHERE cart.CUSTOMER_ID = :user_id AND cart.CONFIRM_STATUS = 'NOT_CONFIRMED'
         `;
         const binds = { user_id };
 
@@ -95,14 +95,14 @@ async function getShowRooms(l_id) {
 async function getorderlist(user_id) {
     try{
         const sql = `
-        SELECT * FROM
-        ORDERLIST O
-        JOIN CART CT ON (O.CART_ID = CT.CART_ID)
-        JOIN CARS C ON (CT.MODEL_COLOR_ID = C.MODEL_COLOR_ID)
-        JOIN USERS U ON (U.ID = C.COMPANY_ID)
-        JOIN CARTYPE CR ON (C.TYPE_ID = CR.TYPE_ID)
-        JOIN SHOWROOM S ON (O.SHOWROOM_ID = S.SHOWROOM_ID)
-        WHERE CT.CUSTOMER_ID = :user_id
+            SELECT * FROM
+            ORDERLIST O
+            JOIN CART CT ON (O.CART_ID = CT.CART_ID)
+            JOIN CARS C ON (CT.MODEL_COLOR_ID = C.MODEL_COLOR_ID)
+            JOIN USERS U ON (U.ID = C.COMPANY_ID)
+            JOIN CARTYPE CR ON (C.TYPE_ID = CR.TYPE_ID)
+            JOIN SHOWROOM S ON (O.SHOWROOM_ID = S.SHOWROOM_ID)
+            WHERE CT.CUSTOMER_ID = :user_id
         `
         const binds = {user_id:user_id};
         const result = await execute(sql,binds);

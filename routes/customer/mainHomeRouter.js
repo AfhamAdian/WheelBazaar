@@ -134,12 +134,12 @@ mainHomeRouter
             var car_id = req.query.car_id;
             var user_id = req.query.user_id;
             const sql = `
-            SELECT * FROM CARS C
-            JOIN COMPANY CO ON C.COMPANY_ID = CO.ID
-            JOIN CARTYPE CA ON C.TYPE_ID = CA.TYPE_ID
-            JOIN USERS U ON C.COMPANY_ID = U.ID
-            JOIN VOUCHER V ON (NVL(C.VOUCHER_NO,0) = V.VOUCHER_NO)
-            WHERE C.MODEL_COLOR_ID = :car_id`
+                SELECT * FROM CARS C
+                JOIN COMPANY CO ON C.COMPANY_ID = CO.ID
+                JOIN CARTYPE CA ON C.TYPE_ID = CA.TYPE_ID
+                JOIN USERS U ON C.COMPANY_ID = U.ID
+                JOIN VOUCHER V ON (NVL(C.VOUCHER_NO,0) = V.VOUCHER_NO)
+                WHERE C.MODEL_COLOR_ID = :car_id`
             const binds = {car_id};
             const product = await execute(sql,binds);
             let user_rating = await get_user_rating(car_id,user_id)
@@ -303,7 +303,7 @@ mainHomeRouter
 
 
 
-
+    mainHomeRouter.use('/filter', require('./filterRouter.js'));
 
 
 

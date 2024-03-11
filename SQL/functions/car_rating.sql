@@ -7,7 +7,7 @@ BEGIN
     totalCount := 0;
     totalRating := 0;
     FOR R IN ( SELECT * FROM rating
-                         WHERE MODEL_COLOR_ID = model_id )
+                WHERE MODEL_COLOR_ID = model_id )
     LOOP 
         totalCount := totalCount + 1;
         totalRating :=  totalRating + R.RATING;
