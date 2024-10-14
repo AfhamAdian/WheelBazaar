@@ -1,4 +1,2 @@
 # WheelBazaar
-2-1 Database project
-
-updated readme
+Complete e-commerce platform for car retailers
